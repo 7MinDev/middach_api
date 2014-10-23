@@ -122,6 +122,9 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 
+		'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
+		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
+		'Cartalyst\Sentinel\Laravel\SentinelServiceProvider',
 	),
 
 	/*
@@ -189,6 +192,10 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 
+		'Authorizer' => 'LucaDegasperi\OAuth2Server\Facades\AuthorizerFacade',
+		'Activation' => 'Cartalyst\Sentinel\Laravel\Facades\Activation',
+		'Reminder'   => 'Cartalyst\Sentinel\Laravel\Facades\Reminder',
+		'Sentinel'   => 'Cartalyst\Sentinel\Laravel\Facades\Sentinel',
 	),
 
 );

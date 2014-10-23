@@ -2,6 +2,21 @@
 
 class BaseController extends Controller {
 
+	protected $authorizer;
+
+	/**
+	 * @param Authorizer $authorizer
+	 */
+	function __construct(Authorizer $authorizer)
+	{
+		$this->authorizer = $authorizer;
+
+		$userId = $this->authorizer->getResourceOwnerId();
+		$user = Sentinel::getUserRepository()->findById($userId);
+
+		Sentinel::setUser($user);
+	}
+
 	/**
 	 * Setup the layout used by the controller.
 	 *
