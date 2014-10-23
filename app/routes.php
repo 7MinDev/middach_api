@@ -14,9 +14,12 @@
 Route::post('login', 'AuthenticationController@login');
 
 // TODO create global route group with oauth filter
-Route::get('logout', ['before' => 'oauth', 'uses' => 'AuthenticationController@logout']);
-Route::get('/', ['before' => 'oauth', function()
-{
-	return View::make('hello', ['user' => Sentinel::getUser()]);
 
-}]);
+Route::group(['before' => 'oauth'], function()
+{
+	Route::get('logout', ['uses' => 'AuthenticationController@logout']);
+	Route::get('/', ['uses' => 'HomeController@showWelcome']);
+});
+
+
+

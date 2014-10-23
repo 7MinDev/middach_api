@@ -9,7 +9,8 @@
 		"cartalyst/sentinel": "1.0.*"
 	},
 	"require-dev": {
-		"barryvdh/laravel-ide-helper": "1.11.*@dev"
+		"barryvdh/laravel-ide-helper": "1.11.*@dev",
+		"doctrine/dbal": "~2.3"
 	},
 	"repositories": [
 	  {

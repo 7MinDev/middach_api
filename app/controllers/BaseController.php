@@ -1,5 +1,7 @@
 <?php
 
+use LucaDegasperi\OAuth2Server\Authorizer;
+
 class BaseController extends Controller {
 
 	protected $authorizer;
