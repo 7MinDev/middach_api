@@ -12,8 +12,12 @@
 */
 
 Route::post('login', 'AuthenticationController@login');
+Route::post('register', 'AuthenticationController@register');
 
-// TODO create global route group with oauth filter
+Route::get('activate/{id}/{code}', 'AuthenticationController@activate');
+
+Route::get('reset', 'AuthenticationController@reset');
+Route::get('reset/{id}/{code}', 'AuthenticationController@processReset');
 
 Route::group(['before' => 'oauth'], function()
 {
