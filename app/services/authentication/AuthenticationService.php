@@ -26,16 +26,15 @@ class AuthenticationService {
 
 		$user = Sentinel::stateless($credentials);
 
-		if (!$user)
+		if ($user)
 		{
-			var_dump(DB::getQueryLog());
-			exit;
+			Sentinel::getUserRepository()
+				->recordLogin($user);
+
+			return $user->getUserId();
 		}
 
-		Sentinel::getUserRepository()
-			->recordLogin($user);
-
-		return $user->getUserId();
+		return false;
 	}
 
 	/**

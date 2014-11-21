@@ -82,4 +82,19 @@ class User extends EloquentUser implements UserInterface, RemindableInterface {
 		'password' 					=> 'required|min:6|confirmed',
 		'password_confirmation' 	=> 'required|min:6'
 	];
+
+	/**
+	 * Validation rules for resetting user password
+	 *
+	 * @var array
+	 */
+	public static $resetRules = [
+		'email'						=> 'required_without:username',
+		'username'					=> 'required_without:email'
+	];
+
+	public static $passwordRules = [
+		'password'					=> 'required|min:6|confirmed',
+		'password_confirmation'		=> 'required|min:6'
+	];
 }

@@ -47,6 +47,8 @@ return array(
 		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
 		'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
 		'Cartalyst\Sentinel\Laravel\SentinelServiceProvider',
+
+		'ExceptionServiceProvider',
 	),
 
 

@@ -11,18 +11,37 @@
 |
 */
 
-Route::post('login', 'AuthenticationController@login');
-Route::post('register', 'AuthenticationController@register');
+Route::post('login', [
+	'as' => 'login',
+	'uses' => 'AuthenticationController@login'
+]);
 
-Route::get('activate/{id}/{code}', 'AuthenticationController@activate');
+Route::post('register', [
+	'as' => 'register',
+	'uses' => 'AuthenticationController@register'
+]);
 
-Route::get('reset', 'AuthenticationController@reset');
-Route::get('reset/{id}/{code}', 'AuthenticationController@processReset');
+Route::get('activate/{id}/{code}', [
+	'as' => 'activate',
+	'uses' => 'AuthenticationController@activate'
+]);
+
+Route::post('reset', [
+	'as' => 'reset',
+	'uses' => 'AuthenticationController@reset'
+]);
+
+Route::put('reset/{id}/{code}', [
+	'as' => 'reset',
+	'uses' => 'AuthenticationController@processReset'
+]);
 
 Route::group(['before' => 'oauth'], function()
 {
-	Route::get('logout', ['uses' => 'AuthenticationController@logout']);
-	Route::get('/', ['uses' => 'HomeController@showWelcome']);
+	Route::get('logout', [
+		'as' => 'logout',
+		'uses' => 'AuthenticationController@logout'
+	]);
 });
 
 

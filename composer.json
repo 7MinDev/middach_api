@@ -10,7 +10,9 @@
 	},
 	"require-dev": {
 		"barryvdh/laravel-ide-helper": "1.11.*@dev",
-		"doctrine/dbal": "~2.3"
+		"doctrine/dbal": "~2.3",
+		"phpunit/phpunit": "4.3.*",
+		"mockery/mockery": "0.9.*"
 	},
 	"repositories": [
 	  {
@@ -26,6 +28,7 @@
 			"app/services",
 			"app/database/migrations",
 			"app/database/seeds",
+			"app/service_provider",
 			"app/tests/TestCase.php"
 		]
 	},
@@ -43,7 +46,10 @@
 		]
 	},
 	"config": {
-		"preferred-install": "dist"
+		"preferred-install": "dist",
+		"github-oauth": {
+			"github.com": "cc554fe314e3c3e0fb4cb63d18e5e560891fe9ac"
+		}
 	},
 	"minimum-stability": "dev"
 }

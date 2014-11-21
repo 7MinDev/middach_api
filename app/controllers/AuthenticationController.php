@@ -120,19 +120,97 @@ class AuthenticationController extends Controller {
 	}
 
 	/**
-	 *
+	 * @return JsonResponse
 	 */
 	public function reset()
 	{
-		// TODO implement
+		$credentials = Input::all();
+		$validator = Validator::make($credentials, User::$resetRules);
+
+		if ($validator->fails())
+		{
+			return new JsonResponse([
+				'status' => 'error',
+				'message' => 'validation_failed',
+				'fields' => $validator->failed()
+			], JsonResponse::HTTP_BAD_REQUEST);
+		}
+
+		$user = Sentinel::getUserRepository()->findByCredentials($credentials);
+
+		if (!$user)
+		{
+			return new JsonResponse([
+				'status' => 'error',
+				'message' => 'user_doesnt_exist'
+			], JsonResponse::HTTP_NOT_FOUND);
+		}
+
+		$reminder = null;
+
+		if (!$reminder = Reminder::exists($user))
+		{
+			$reminder = Reminder::create($user);
+		}
+
+		$code = $reminder->code;
+
+		Mail::queue('emails.auth.reminder', compact('user', 'code'),
+			function(Message $message) use ($user)
+			{
+				$message->to($user->email)
+					->subject('Reset your account password');
+			});
+
+		return new JsonResponse([
+			'status' => 'success',
+			'message' => 'password_reset_successfully'
+		], JsonResponse::HTTP_OK);
 	}
 
 	/**
 	 * @param $userId
 	 * @param $code
+	 * @return JsonResponse
 	 */
 	public function processReset($userId, $code)
 	{
-		// TODO implement
+		$credentials = Input::all();
+
+		$validator = Validator::make($credentials, User::$passwordRules);
+
+		if ($validator->fails())
+		{
+			return new JsonResponse([
+				'status' => 'error',
+				'message' => 'validation_failed',
+				'fields' => $validator->failed()
+			], JsonResponse::HTTP_BAD_REQUEST);
+		}
+
+		$user = Sentinel::getUserRepository()->findById($userId);
+
+		if (!$user)
+		{
+			return new JsonResponse([
+				'status' => 'error',
+				'message' => 'user_doesnt_exist'
+			], JsonResponse::HTTP_NOT_FOUND);
+		}
+
+		$resetComplete = Reminder::complete($user, $code, $credentials['password']);
+
+		if (!$resetComplete)
+		{
+			return new JsonResponse([
+				'status' => 'error',
+				'message' => 'invalid_or_expired_code'
+			], JsonResponse::HTTP_BAD_REQUEST);
+		}
+
+		return new JsonResponse([
+			'status' => 'success',
+			'message' => 'password_reset_success'
+		], JsonResponse::HTTP_OK);
 	}
 }
