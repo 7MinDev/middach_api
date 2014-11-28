@@ -296,7 +296,7 @@ class AuthenticationControllerTest extends TestCase {
 		$user = Sentinel::register($userData);
 
 		// create activation entry for that user
-		$activation = Activation::create($user);
+		Activation::create($user);
 
 		// .. and forget the activation code
 		$code = 'somesillycode12385';
