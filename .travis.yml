@@ -7,15 +7,15 @@ php:
   - hhvm
 
 env:
-  APP_ENV: local
-  env: local
+  APP_ENV: ci
+  env: ci
 
 before_script:
   - travis_retry composer self-update
   - travis_retry composer install --prefer-source --no-interaction --dev
-  - php artisan migrate --force --package=cartalyst/sentinel --env=local
-  - php artisan migrate --force --env=local
-  - php artisan db:seed --force --env=local
+  - php artisan migrate --package=cartalyst/sentinel
+  - php artisan migrate
+  - php artisan db:seed
 
 script: vendor/bin/phpunit --verbose
 
