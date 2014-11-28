@@ -8,11 +8,12 @@ php:
 
 env:
   APP_ENV: local
+  env: local
 
 before_script:
   - travis_retry composer self-update
   - travis_retry composer install --prefer-source --no-interaction --dev
-  - php artisan migrate --package=cartalyst/sentinel --force
+  - php artisan migrate --force --package=cartalyst/sentinel
   - php artisan migrate --force
   - php artisan db:seed --force
 
