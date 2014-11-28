@@ -13,9 +13,9 @@ env:
 before_script:
   - travis_retry composer self-update
   - travis_retry composer install --prefer-source --no-interaction --dev
-  - php artisan migrate --force --package=cartalyst/sentinel
-  - php artisan migrate --force
-  - php artisan db:seed --force
+  - php artisan migrate --force --package=cartalyst/sentinel --env=local
+  - php artisan migrate --force --env=local
+  - php artisan db:seed --force --env=local
 
 script: vendor/bin/phpunit --verbose
 
