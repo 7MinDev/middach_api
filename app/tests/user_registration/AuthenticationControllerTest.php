@@ -301,7 +301,12 @@ class AuthenticationControllerTest extends TestCase {
 		// .. and forget the activation code
 		$code = 'somesillycode12385';
 
-		$response = $this->call('GET', route('activate', [$user->id, $code]));
+		$activationData = [
+			'userId' => $user->id,
+			'code' => $code,
+		];
+
+		$response = $this->call('POST', route('activate'), $activationData);
 
 		$this->assertTrue($response->isClientError(),
 			'Response was not an error');
@@ -331,10 +336,145 @@ class AuthenticationControllerTest extends TestCase {
 		// .. and get the correct activation code
 		$code = $activation->code;
 
-		$response = $this->call('GET', route('activate', [$user->id, $code]));
+		$activationData = [
+			'userId' => $user->id,
+			'code' => $code,
+		];
+
+		$response = $this->call('POST', route('activate'), $activationData);
 
 		$this->assertTrue($response->isOk(),
 			'Response was an error');
 	}
 
+	/**
+	 *
+	 * @test
+	 */
+	public function testRequestPasswordResetWithInvalidCredentials()
+	{
+		$credentials = [];
+
+		/*
+		 * 1. no userdata at all
+		 */
+		$response = $this->call('POST', route('reset'));
+
+		$this->assertTrue($response->isClientError(),
+			'Response was not an client error');
+
+		/*
+		 * 2. test invalid username
+		 */
+		$credentials['loginName'] = 'darthvader';
+		$response = $this->call('POST', route('reset'), $credentials);
+
+		$this->assertTrue($response->isClientError(),
+			'Response was not an client error');
+
+		/*
+		 * 3. test invalid email
+		 */
+		$credentials['loginName'] = 'darthvader@deathstar.sw';
+		$response = $this->call('POST', route('reset'), $credentials);
+
+		$this->assertTrue($response->isClientError(),
+			'Response was not an client error');
+	}
+
+	/**
+	 * Test
+	 *
+	 * @test
+	 */
+	public function testRequestPasswordResetWithValidUserName()
+	{
+		$credentials = ['loginName' => 'testuser'];
+
+		$response = $this->call('POST', route('reset'), $credentials);
+
+		$this->assertTrue($response->isOk(),
+			'Response was an error');
+	}
+
+	/**
+	 *
+	 * @test
+	 */
+	public function testRequestPasswordResetWithValidEmail()
+	{
+		$credentials = ['loginName' => 'testuser@test.de'];
+
+		$response = $this->call('POST', route('reset'), $credentials);
+
+		$this->assertTrue($response->isOk(),
+			'Response was an error');
+	}
+
+	/**
+	 *
+	 * @test
+	 */
+	public function testCompleteInvalidPasswordReset()
+	{
+		$user = Sentinel::getUserRepository()->findById(1);
+		Reminder::create($user);
+
+		$data = [
+			'userId' => $user->getUserId(),
+			'code' => 'tadaThisIsAWrongCode',
+			'password' => 'lalala',
+			'password_confirmation' => 'lalala'
+		];
+
+		$response = $this->call('POST', route('processReset'), $data);
+
+		$this->assertTrue($response->isClientError(),
+			'Response was not an error');
+	}
+
+	/**
+	 *
+	 * @test
+	 */
+	public function testCompleteValidPasswordReset()
+	{
+		$user = Sentinel::getUserRepository()->findById(1);
+		$reminder = Reminder::create($user);
+
+		$password = 'NewTest123!';
+
+		$data = [
+			'userId' => $user->getUserId(),
+			'code' => $reminder->code,
+			'password' => $password,
+			'password_confirmation' => $password
+		];
+
+		$response = $this->call('POST', route('processReset'), $data);
+
+		$this->assertTrue($response->isOk(),
+			'Response was not an error');
+
+		// try login with the new password
+
+		$credentials = [
+			'grant_type' => 'password',
+			'client_id' => 'testClient',
+			'client_secret' => 'testSecret',
+			'username' => 'testuser@test.de',
+			'password' => $password
+		];
+
+		$response = $this->call('POST', route('login'), $credentials);
+
+		$this->assertTrue($response->isOk(), 'Response was not ok.');
+
+		$this->assertNotEmpty($response->getContent(), 'Response content is empty');
+
+		$jsonResponse = json_decode($response->getContent());
+		$token = $jsonResponse->access_token;
+
+		$this->assertNotEmpty($token, 'Token is empty');
+	}
 }

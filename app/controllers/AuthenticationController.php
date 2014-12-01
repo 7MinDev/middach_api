@@ -1,4 +1,5 @@
 <?php
+use Cartalyst\Sentinel\Reminders\EloquentReminder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Mail\Message;
 use LucaDegasperi\OAuth2Server\Authorizer;
@@ -101,8 +102,11 @@ class AuthenticationController extends Controller {
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function activate($userId, $code)
+	public function activate()
 	{
+		$userId = Input::get('userId');
+		$code = Input::get('code');
+
 		$user = Sentinel::getUserRepository()->findById($userId);
 
 		if (!Activation::complete($user, $code))
@@ -124,17 +128,19 @@ class AuthenticationController extends Controller {
 	 */
 	public function reset()
 	{
-		$credentials = Input::all();
-		$validator = Validator::make($credentials, User::$resetRules);
+		$loginName = Input::get('loginName');
 
-		if ($validator->fails())
+		if (!$loginName || empty($loginName))
 		{
 			return new JsonResponse([
 				'status' => 'error',
-				'message' => 'validation_failed',
-				'fields' => $validator->failed()
+				'message' => 'loginName field is missing or empty',
 			], JsonResponse::HTTP_BAD_REQUEST);
 		}
+
+		$credentials = [
+			'login' => $loginName
+		];
 
 		$user = Sentinel::getUserRepository()->findByCredentials($credentials);
 
@@ -146,9 +152,9 @@ class AuthenticationController extends Controller {
 			], JsonResponse::HTTP_NOT_FOUND);
 		}
 
-		$reminder = null;
+		$reminder = Reminder::exists($user);
 
-		if (!$reminder = Reminder::exists($user))
+		if (!$reminder || $reminder == null)
 		{
 			$reminder = Reminder::create($user);
 		}
@@ -169,13 +175,17 @@ class AuthenticationController extends Controller {
 	}
 
 	/**
-	 * @param $userId
-	 * @param $code
 	 * @return JsonResponse
 	 */
-	public function processReset($userId, $code)
+	public function processReset()
 	{
-		$credentials = Input::all();
+		$credentials = [
+			'password' => Input::get('password'),
+			'password_confirmation' => Input::get('password_confirmation')
+		];
+
+		$userId = Input::get('userId');
+		$code = Input::get('code');
 
 		$validator = Validator::make($credentials, User::$passwordRules);
 

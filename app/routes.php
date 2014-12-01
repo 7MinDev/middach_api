@@ -11,6 +11,10 @@
 |
 */
 
+/*
+ * Public routes without authentication need,
+ * like login, register, activation etc.
+ */
 Route::post('login', [
 	'as' => 'login',
 	'uses' => 'AuthenticationController@login'
@@ -21,7 +25,7 @@ Route::post('register', [
 	'uses' => 'AuthenticationController@register'
 ]);
 
-Route::get('activate/{id}/{code}', [
+Route::post('activate', [
 	'as' => 'activate',
 	'uses' => 'AuthenticationController@activate'
 ]);
@@ -31,11 +35,16 @@ Route::post('reset', [
 	'uses' => 'AuthenticationController@reset'
 ]);
 
-Route::put('reset/{id}/{code}', [
-	'as' => 'reset',
+Route::post('processReset', [
+	'as' => 'processReset',
 	'uses' => 'AuthenticationController@processReset'
 ]);
 
+/*
+ * Private routes that need authentication
+ *
+ * Insert Resource routes here!
+ */
 Route::group(['before' => 'oauth'], function()
 {
 	Route::get('logout', [
