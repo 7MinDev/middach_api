@@ -5,10 +5,6 @@ use League\OAuth2\Server\Exception\InvalidRequestException;
 /**
  * Tests for the AuthenticationController class
  *
- * Tests are separated into 2 categories:
- * - first we check if our routes work by calling them and receiving correct responses
- * - second we check if the controller logic works
- *
  * @author pschmidt
  */
 
