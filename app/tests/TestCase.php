@@ -16,4 +16,27 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 		return require __DIR__.'/../../bootstrap/start.php';
 	}
 
+	/**
+	 *
+	 */
+	public function setUp()
+	{
+		parent::setUp();
+
+		Artisan::call('migrate', ['--package' => 'cartalyst/sentinel']);
+		Artisan::call('migrate');
+		Artisan::call('db:seed');
+		Mail::pretend(true);
+	}
+
+	/**
+	 *
+	 */
+	public function tearDown()
+	{
+		parent::tearDown();
+		Mockery::close();
+		Artisan::call('migrate:reset');
+	}
+
 }

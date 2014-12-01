@@ -11,14 +11,46 @@
 |
 */
 
-Route::post('login', 'AuthenticationController@login');
+/*
+ * Public routes without authentication need,
+ * like login, register, activation etc.
+ */
+Route::post('login', [
+	'as' => 'login',
+	'uses' => 'AuthenticationController@login'
+]);
 
-// TODO create global route group with oauth filter
+Route::post('register', [
+	'as' => 'register',
+	'uses' => 'AuthenticationController@register'
+]);
 
+Route::post('activate', [
+	'as' => 'activate',
+	'uses' => 'AuthenticationController@activate'
+]);
+
+Route::post('reset', [
+	'as' => 'reset',
+	'uses' => 'AuthenticationController@reset'
+]);
+
+Route::post('processReset', [
+	'as' => 'processReset',
+	'uses' => 'AuthenticationController@processReset'
+]);
+
+/*
+ * Private routes that need authentication
+ *
+ * Insert Resource routes here!
+ */
 Route::group(['before' => 'oauth'], function()
 {
-	Route::get('logout', ['uses' => 'AuthenticationController@logout']);
-	Route::get('/', ['uses' => 'HomeController@showWelcome']);
+	Route::get('logout', [
+		'as' => 'logout',
+		'uses' => 'AuthenticationController@logout'
+	]);
 });
 
 
