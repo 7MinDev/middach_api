@@ -1,7 +1,5 @@
 <?php namespace App\Providers;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\ServiceProvider;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 
 /**
@@ -10,19 +8,14 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class ExceptionServiceProvider extends ServiceProvider
 {
-
 	/**
 	 * Register the service provider.
+	 *
+	 * This service provider is for registering any custom/own exception classes
 	 *
 	 * @return void
 	 */
 	public function register()
 	{
-//		App::error(function (MethodNotAllowedHttpException $e, $code)
-//		{
-//			return new JsonResponse([
-//				'error' => $e->getMessage() ?: 'Method not allowed.'
-//			], $code);
-//		});
 	}
 }
