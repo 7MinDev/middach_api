@@ -10,6 +10,9 @@ env:
   APP_ENV: ci
   env: ci
 
+  global:
+    - secure: "IANsLfFHXuiSSiTjc5/+xu7gsnrvlpc+WbAXJ8vl/Llxq6XRn9WpRruli7woMqw+mUlafRDxjGG6vY57otTePFysEPrPWVElaJ2hP7ULk5/yM6LDvr4Nad+NT412emCk0/xCLAZfnlQ0pdHONSObrp0jFTGks6N2BWLmNDXyo60="
+
 before_script:
   - travis_retry composer self-update
   - travis_retry composer install --prefer-source --no-interaction --dev
