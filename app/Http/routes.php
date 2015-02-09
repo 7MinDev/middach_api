@@ -11,11 +11,27 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index');
+Route::post('login', [
+	'as' => 'login',
+	'uses' => 'Auth\AuthenticationController@login'
+]);
 
-Route::get('home', 'HomeController@index');
+Route::post('register', [
+	'as' => 'register',
+	'uses' => 'Auth\AuthenticationController@register'
+]);
 
-Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
+Route::post('activate', [
+	'as' => 'activate',
+	'uses' => 'Auth\AuthenticationController@activate'
+]);
+
+Route::post('reset', [
+	'as' => 'reset',
+	'uses' => 'Auth\AuthenticationController@reset'
+]);
+
+Route::post('processReset', [
+	'as' => 'processReset',
+	'uses' => 'Auth\AuthenticationController@processReset'
 ]);

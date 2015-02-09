@@ -1,17 +1,20 @@
 <?php namespace App\Http\Controllers\Auth;
 
-use Activation;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterUserRequest;
+use App\Http\Requests\Request;
 use App\Models\User;
-use Cartalyst\Sentinel\Sentinel;
+use App\Services\Authenticator;
 use Illuminate\Contracts\Auth\Registrar;
-use Validator;
-use Illuminate\Foundation\Http\FormRequest as Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Mail\Message;
-use Illuminate\Mail\Mailer as Mail;
-use Reminder;
 
+use Activation;
+use LucaDegasperi\OAuth2Server\Authorizer;
+use Mail;
+use Response;
+use Sentinel;
+use Symfony\Component\HttpFoundation\Response as Status;
+use Validator;
+use Reminder;
 
 /**
  *
@@ -21,10 +24,9 @@ use Reminder;
 class AuthenticationController extends Controller {
 
 	/**
-	 * TODO
 	 * @var Authorizer
 	 */
-//	private $authorizer;
+	private $authorizer;
 
 	/**
 	 * @var Registrar
@@ -32,95 +34,75 @@ class AuthenticationController extends Controller {
 	private $registrar;
 
 	/**
-	 *
 	 * @param Authorizer $authorizer
-	 */
-//	function __construct(Authorizer $authorizer)
-//	{
-//		$this->authorizer = $authorizer;
-//	}
-
-	/**
 	 * @param Registrar $registrar
 	 */
-	function __construct(Registrar $registrar)
+	function __construct(Authorizer $authorizer, Registrar $registrar)
 	{
+		$this->authorizer = $authorizer;
 		$this->registrar = $registrar;
 	}
 
-
 	/**
-	 * @return \Symfony\Component\HttpFoundation\Response|static
+	 *
 	 */
 	public function login()
 	{
-//		return JsonResponse::create($this->authorizer->issueAccessToken());
+		return Response::json($this->authorizer->issueAccessToken());
 	}
 
 	/**
-	 * @return \Symfony\Component\HttpFoundation\Response|static
+	 *
 	 */
 	public function logout()
 	{
-//		$accessToken = $this->authorizer->getChecker()->getAccessToken();
-//
-//		if ($accessToken != null && AuthenticationService::logout($accessToken))
-//		{
-//			return new JsonResponse('logged out', JsonResponse::HTTP_OK);
-//		}
-//		else
-//		{
-//			return new JsonResponse('logged out failed', JsonResponse::HTTP_BAD_REQUEST);
-//		}
+		$accessToken = $this->authorizer->getChecker()->getAccessToken();
+
+		if ($accessToken != null && Authenticator::logout($accessToken))
+		{
+			return Response::json('logged out');
+		}
+		else
+		{
+			return Response::json('logged out failed', Status::HTTP_BAD_REQUEST);
+		}
 	}
 
 	/**
-	 * @param Request $request
-	 * @return JsonResponse
+	 * Endpoint for registering a new user.
+	 *
+	 * @param RegisterUserRequest $request
+	 * @return Response
 	 */
-	public function register(Request $request)
+	public function register(RegisterUserRequest $request)
 	{
-		$validator = $this->registrar->validator($request->all());
-
-		if ($validator->fails())
-		{
-			$this->throwValidationException($request, $validator);
-		}
-
-		$user = $this->registrar->create($request->all());
-
-		if (!$user)
-		{
-			return new JsonResponse([
-				'status' => 'server_error',
-				'message' => 'failed to register user'
-			], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-		}
+		$user = Sentinel::register($request->except('password_confirmation'));
 
 		$activation = Activation::create($user);
+
 		$code = $activation->code;
 
 		Mail::queue(
 			'emails.auth.activate',
 			compact('user', 'code'),
-			function(Message $message) use ($user)
+			function($message) use ($user)
 			{
 				$message
 					->to($user->email)
 					->subject('Account Activation');
 			});
 
-		return new JsonResponse([
+		return Response::json([
 			'status' => 'success',
-			'message' => 'registration_complete',
-		], JsonResponse::HTTP_OK);
+			'message' => 'registration_complete'
+		]);
 	}
 
 	/**
-	 * @param $userId
-	 * @param $code
+	 * Endpoint for activating a user
 	 *
-	 * @return \Illuminate\Http\JsonResponse
+	 * @param Request $request
+	 * @return Response|Status
 	 */
 	public function activate(Request $request)
 	{
@@ -131,20 +113,24 @@ class AuthenticationController extends Controller {
 
 		if (!Activation::complete($user, $code))
 		{
-			return new JsonResponse([
+			return Response::json([
 				'status' => 'error',
 				'message' => 'invalid_or_expired_activation_code'
-			], JsonResponse::HTTP_BAD_REQUEST);
+			], Status::HTTP_BAD_REQUEST);
+
 		}
 
-		return new JsonResponse([
+		return Response::json([
 			'status' => 'success',
 			'message' => 'activation_complete'
-		], JsonResponse::HTTP_OK);
+		]);
 	}
 
 	/**
-	 * @return JsonResponse
+	 * Endpoint for starting a password reset process.
+	 *
+	 * @param Request $request
+	 * @return Response
 	 */
 	public function reset(Request $request)
 	{
@@ -152,10 +138,10 @@ class AuthenticationController extends Controller {
 
 		if (!$loginName || empty($loginName))
 		{
-			return new JsonResponse([
+			return Response::json([
 				'status' => 'error',
 				'message' => 'loginName field is missing or empty',
-			], JsonResponse::HTTP_BAD_REQUEST);
+			], Status::HTTP_BAD_REQUEST);
 		}
 
 		$credentials = [
@@ -166,10 +152,10 @@ class AuthenticationController extends Controller {
 
 		if (!$user)
 		{
-			return new JsonResponse([
+			return Response::json([
 				'status' => 'error',
 				'message' => 'user_doesnt_exist'
-			], JsonResponse::HTTP_NOT_FOUND);
+			], Status::HTTP_NOT_FOUND);
 		}
 
 		$reminder = Reminder::exists($user);
@@ -182,20 +168,21 @@ class AuthenticationController extends Controller {
 		$code = $reminder->code;
 
 		Mail::queue('emails.auth.reminder', compact('user', 'code'),
-			function(Message $message) use ($user)
+			function($message) use ($user)
 			{
 				$message->to($user->email)
 					->subject('Reset your account password');
 			});
 
-		return new JsonResponse([
+		return Response::json([
 			'status' => 'success',
 			'message' => 'password_reset_successfully'
-		], JsonResponse::HTTP_OK);
+		]);
 	}
 
 	/**
-	 * @return JsonResponse
+	 * @param Request $request
+	 * @return Response|Status
 	 */
 	public function processReset(Request $request)
 	{
@@ -211,36 +198,32 @@ class AuthenticationController extends Controller {
 
 		if ($validator->fails())
 		{
-			return new JsonResponse([
-				'status' => 'error',
-				'message' => 'validation_failed',
-				'fields' => $validator->failed()
-			], JsonResponse::HTTP_BAD_REQUEST);
+			$this->throwValidationException($request, $validator);
 		}
 
 		$user = Sentinel::getUserRepository()->findById($userId);
 
 		if (!$user)
 		{
-			return new JsonResponse([
+			return Response::json([
 				'status' => 'error',
 				'message' => 'user_doesnt_exist'
-			], JsonResponse::HTTP_NOT_FOUND);
+			], Status::HTTP_NOT_FOUND);
 		}
 
 		$resetComplete = Reminder::complete($user, $code, $credentials['password']);
 
 		if (!$resetComplete)
 		{
-			return new JsonResponse([
+			return Response::json([
 				'status' => 'error',
 				'message' => 'invalid_or_expired_code'
-			], JsonResponse::HTTP_BAD_REQUEST);
+			], Status::HTTP_BAD_REQUEST);
 		}
 
-		return new JsonResponse([
+		return Response::json([
 			'status' => 'success',
 			'message' => 'password_reset_success'
-		], JsonResponse::HTTP_OK);
+		]);
 	}
 }

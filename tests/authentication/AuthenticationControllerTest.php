@@ -1,4 +1,6 @@
 <?php
+use Cartalyst\Sentinel\Laravel\Facades\Reminder;
+use League\OAuth2\Server\Exception\InvalidCredentialsException;
 
 /**
  * Tests for the AuthenticationController class
@@ -16,42 +18,30 @@ class AuthenticationControllerTest extends TestCase {
 	 * POST request without data should result in a client error.
 	 * @test
 	 */
-//	public function testLoginReturnsErrorWithoutData()
-//	{
-//		try {
-//			$this->call('POST', route('login'));
-//		}
-//		catch (InvalidRequestException $e)
-//		{
-//			return;
-//		}
-//
-//		$this->fail('InvalidRequestException was not thrown.');
-//	}
+	public function testLoginReturnsErrorWithoutData()
+	{
+		$response = $this->call('POST', route('login'));
+
+		$this->assertTrue($response->isClientError(), 'Response was not an client error.');
+	}
 
 	/**
 	 * POST request with OAuth2 fields but without credentials should result in an error.
 	 *
 	 * @test
 	 */
-//	public function testLoginReturnsErrorWithoutCredentials()
-//	{
-//		try {
-//			$credentials = [
-//				'grant_type' => 'password',
-//				'client_id' => 'testClient',
-//				'client_secret' => 'testSecret',
-//			];
-//
-//			$this->call('POST', route('login'), $credentials);
-//		}
-//		catch (InvalidRequestException $e)
-//		{
-//			return;
-//		}
-//
-//		$this->fail('InvalidRequestException was not thrown.');
-//	}
+	public function testLoginReturnsErrorWithoutCredentials()
+	{
+		$credentials = [
+			'grant_type' => 'password',
+			'client_id' => 'testClient',
+			'client_secret' => 'testSecret',
+		];
+
+		$response = $this->call('POST', route('login'), $credentials);
+
+		$this->assertTrue($response->isClientError(), 'Response was not an client error');
+	}
 
 	/**
 	 * POST request with correct data (username as username)
@@ -59,27 +49,27 @@ class AuthenticationControllerTest extends TestCase {
 	 *
 	 * @test
 	 */
-//	public function testLoginWithValidUsernameCredentials()
-//	{
-//		$credentials = [
-//			'grant_type' => 'password',
-//			'client_id' => 'testClient',
-//			'client_secret' => 'testSecret',
-//			'username' => 'testuser',
-//			'password' => 'test'
-//		];
-//
-//		$response = $this->call('POST', route('login'), $credentials);
-//
-//		$this->assertTrue($response->isOk(), 'Response was not ok.');
-//
-//		$this->assertNotEmpty($response->getContent(), 'Response content is empty');
-//
-//		$jsonResponse = json_decode($response->getContent());
-//		$token = $jsonResponse->access_token;
-//
-//		$this->assertNotEmpty($token, 'Token is empty');
-//	}
+	public function testLoginWithValidUsernameCredentials()
+	{
+		$credentials = [
+			'grant_type' => 'password',
+			'client_id' => 'testClient',
+			'client_secret' => 'testSecret',
+			'username' => 'testuser',
+			'password' => 'test'
+		];
+
+		$response = $this->call('POST', route('login'), $credentials);
+
+		$this->assertTrue($response->isOk(), 'Response was not ok.' . $response);
+
+		$this->assertNotEmpty($response->getContent(), 'Response content is empty');
+
+		$jsonResponse = json_decode($response->getContent());
+		$token = $jsonResponse->access_token;
+
+		$this->assertNotEmpty($token, 'Token is empty');
+	}
 
 	/**
 	 * POST request with correct data (email as username)
@@ -87,27 +77,27 @@ class AuthenticationControllerTest extends TestCase {
 	 *
 	 * @test
 	 */
-//	public function testLoginWithValidEmailCredentials()
-//	{
-//		$credentials = [
-//			'grant_type' => 'password',
-//			'client_id' => 'testClient',
-//			'client_secret' => 'testSecret',
-//			'username' => 'testuser@test.de',
-//			'password' => 'test'
-//		];
-//
-//		$response = $this->call('POST', route('login'), $credentials);
-//
-//		$this->assertTrue($response->isOk(), 'Response was not ok.');
-//
-//		$this->assertNotEmpty($response->getContent(), 'Response content is empty');
-//
-//		$jsonResponse = json_decode($response->getContent());
-//		$token = $jsonResponse->access_token;
-//
-//		$this->assertNotEmpty($token, 'Token is empty');
-//	}
+	public function testLoginWithValidEmailCredentials()
+	{
+		$credentials = [
+			'grant_type' => 'password',
+			'client_id' => 'testClient',
+			'client_secret' => 'testSecret',
+			'username' => 'testuser@test.de',
+			'password' => 'test'
+		];
+
+		$response = $this->call('POST', route('login'), $credentials);
+
+		$this->assertTrue($response->isOk(), 'Response was not ok.');
+
+		$this->assertNotEmpty($response->getContent(), 'Response content is empty');
+
+		$jsonResponse = json_decode($response->getContent());
+		$token = $jsonResponse->access_token;
+
+		$this->assertNotEmpty($token, 'Token is empty');
+	}
 
 	/**
 	 * POST request /login with incorrect login data
@@ -115,26 +105,20 @@ class AuthenticationControllerTest extends TestCase {
 	 *
 	 * @test
 	 */
-//	public function testLoginWithInvalidCredentials()
-//	{
-//		$credentials = [
-//			'grant_type' => 'password',
-//			'client_id' => 'testClient',
-//			'client_secret' => 'testSecret',
-//			'username' => 'wronguser',
-//			'password' => 'testwhat'
-//		];
-//
-//		try {
-//			$this->call('POST', route('login'), $credentials);
-//		}
-//		catch (InvalidCredentialsException $e)
-//		{
-//			return;
-//		}
-//
-//		$this->fail('InvalidCredentialsException was not thrown.');
-//	}
+	public function testLoginWithInvalidCredentials()
+	{
+		$credentials = [
+			'grant_type' => 'password',
+			'client_id' => 'testClient',
+			'client_secret' => 'testSecret',
+			'username' => 'wronguser',
+			'password' => 'testwhat'
+		];
+
+		$response = $this->call('POST', route('login'), $credentials);
+
+		$this->assertTrue($response->isClientError(), 'Response was not an client error');
+	}
 
 	/**
 	 * Testing validation rules (mostly the 'required' ones)
@@ -268,7 +252,7 @@ class AuthenticationControllerTest extends TestCase {
 		$response = $this->call('POST', route('register'), $userData);
 
 		$this->assertTrue($response->isOk(),
-			'Response code was an error');
+			'Response code was an error' . $response);
 	}
 
 	/**
@@ -451,7 +435,6 @@ class AuthenticationControllerTest extends TestCase {
 			'Response was not an error');
 
 		// try login with the new password
-
 		$credentials = [
 			'grant_type' => 'password',
 			'client_id' => 'testClient',
