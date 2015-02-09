@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Seeder;
 
 /**
@@ -9,8 +10,6 @@ class UserTableSeeder extends Seeder {
 
 	public function run()
 	{
-		DB::table('users')->truncate();
-
 		$credentials = [
 			'email' => 'testuser@test.de',
 			'password' => 'test',

@@ -38,4 +38,14 @@ class User extends EloquentUser {
 	 */
 	protected $hidden = array('password');
 
+	/**
+	 * restaurants relationship
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function restaurants()
+	{
+		return $this->hasMany(Restaurant::class);
+	}
+
 }

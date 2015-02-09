@@ -35,3 +35,22 @@ Route::post('processReset', [
 	'as' => 'processReset',
 	'uses' => 'Auth\AuthenticationController@processReset'
 ]);
+
+/*
+ * Private routes that need authentication
+ *
+ * Insert Resource routes here!
+ */
+Route::group(['before' => 'oauth'], function()
+{
+	Route::get('logout', [
+		'as' => 'logout',
+		'uses' => 'Auth\AuthenticationController@logout'
+	]);
+
+	Route::post('restaurants/create',[
+		'as' => 'restaurants.create',
+		'uses' => 'RestaurantsController@create'
+	]);
+});
+
