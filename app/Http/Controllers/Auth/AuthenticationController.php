@@ -1,11 +1,11 @@
 <?php namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ActivateAccountRequest;
+use App\Http\Requests\ProcessResetPasswordRequest;
 use App\Http\Requests\RegisterUserRequest;
-use App\Http\Requests\Request;
-use App\Models\User;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Services\Authenticator;
-use Illuminate\Contracts\Auth\Registrar;
 
 use Activation;
 use LucaDegasperi\OAuth2Server\Authorizer;
@@ -13,7 +13,6 @@ use Mail;
 use Response;
 use Sentinel;
 use Symfony\Component\HttpFoundation\Response as Status;
-use Validator;
 use Reminder;
 
 /**
@@ -29,18 +28,11 @@ class AuthenticationController extends Controller {
 	private $authorizer;
 
 	/**
-	 * @var Registrar
-	 */
-	private $registrar;
-
-	/**
 	 * @param Authorizer $authorizer
-	 * @param Registrar $registrar
 	 */
-	function __construct(Authorizer $authorizer, Registrar $registrar)
+	function __construct(Authorizer $authorizer)
 	{
 		$this->authorizer = $authorizer;
-		$this->registrar = $registrar;
 	}
 
 	/**
@@ -101,10 +93,10 @@ class AuthenticationController extends Controller {
 	/**
 	 * Endpoint for activating a user
 	 *
-	 * @param Request $request
-	 * @return Response|Status
+	 * @param ActivateAccountRequest $request
+	 * @return Status
 	 */
-	public function activate(Request $request)
+	public function activate(ActivateAccountRequest $request)
 	{
 		$userId = $request->get('userId');
 		$code = $request->get('code');
@@ -129,10 +121,10 @@ class AuthenticationController extends Controller {
 	/**
 	 * Endpoint for starting a password reset process.
 	 *
-	 * @param Request $request
-	 * @return Response
+	 * @param ResetPasswordRequest $request
+	 * @return Status
 	 */
-	public function reset(Request $request)
+	public function reset(ResetPasswordRequest $request)
 	{
 		$loginName = $request->get('loginName');
 
@@ -181,10 +173,10 @@ class AuthenticationController extends Controller {
 	}
 
 	/**
-	 * @param Request $request
-	 * @return Response|Status
+	 * @param ProcessResetPasswordRequest $request
+	 * @return Status
 	 */
-	public function processReset(Request $request)
+	public function processReset(ProcessResetPasswordRequest $request)
 	{
 		$credentials = [
 			'password' => $request->get('password'),
@@ -193,13 +185,6 @@ class AuthenticationController extends Controller {
 
 		$userId = $request->get('userId');
 		$code = $request->get('code');
-
-		$validator = Validator::make($credentials, User::$passwordRules);
-
-		if ($validator->fails())
-		{
-			$this->throwValidationException($request, $validator);
-		}
 
 		$user = Sentinel::getUserRepository()->findById($userId);
 
