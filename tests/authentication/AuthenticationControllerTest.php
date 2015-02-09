@@ -1,6 +1,5 @@
 <?php
 use Cartalyst\Sentinel\Laravel\Facades\Reminder;
-use League\OAuth2\Server\Exception\InvalidCredentialsException;
 
 /**
  * Tests for the AuthenticationController class

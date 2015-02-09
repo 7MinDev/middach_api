@@ -8,7 +8,7 @@ use App\Repositories\Contracts\RestaurantRepositoryContract;
 use Response;
 use Sentinel;
 
-class RestaurantsController extends Controller
+class RestaurantsController extends BaseController
 {
 
 	/**
@@ -21,6 +21,7 @@ class RestaurantsController extends Controller
 	 */
 	public function __construct(RestaurantRepositoryContract $restaurant)
 	{
+		parent::__construct();
 		$this->restaurant = $restaurant;
 	}
 
