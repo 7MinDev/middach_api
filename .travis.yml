@@ -12,6 +12,7 @@ env:
 
   global:
     - secure: "IANsLfFHXuiSSiTjc5/+xu7gsnrvlpc+WbAXJ8vl/Llxq6XRn9WpRruli7woMqw+mUlafRDxjGG6vY57otTePFysEPrPWVElaJ2hP7ULk5/yM6LDvr4Nad+NT412emCk0/xCLAZfnlQ0pdHONSObrp0jFTGks6N2BWLmNDXyo60="
+    - secure: "lSrZIraq9k6S4HJoW7aKn7+3qiRO+MigOUE9vQMEcxUX8iaqLYPCk/MZJAKKkPZ2ehSzxFUxE6d8+2V+7Gm4Fvv4mSYIWf2aBIK4QcGzcqau+I2radKc0S4YLXuyxeJWzGoAb8eiW2ZWn+KyNNP8kcCqxQ57exOSA+8gONNjCew="
 
 before_script:
   - travis_retry composer self-update
