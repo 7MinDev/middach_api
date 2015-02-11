@@ -29,7 +29,7 @@ class Restaurant extends Model
 	 */
 	public function openingTimes()
 	{
-		return $this->hasMany('OpeningTime');
+		return $this->hasMany(OpeningTime::class);
 	}
 
 	/**
@@ -39,6 +39,6 @@ class Restaurant extends Model
 	 */
 	public function owner()
 	{
-		return $this->belongsTo(User::class);
+		return $this->belongsTo(User::class, 'user_id');
 	}
 }

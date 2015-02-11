@@ -25,14 +25,14 @@ class RestaurantRepository implements RestaurantRepositoryContract
 	}
 
 	/**
-	 * find by id
+	 * Get a restaurant by its id
 	 *
 	 * @param $id
-	 * @return mixed
+	 * @return mixed|null
 	 */
 	public function findById($id)
 	{
-		// TODO: Implement findById() method.
+		return $this->model->find(1);
 	}
 
 

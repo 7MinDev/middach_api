@@ -45,7 +45,7 @@ class User extends EloquentUser {
 	 */
 	public function restaurants()
 	{
-		return $this->hasMany(Restaurant::class);
+		return $this->hasMany(Restaurant::class, 'user_id');
 	}
 
 }

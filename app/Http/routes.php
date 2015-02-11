@@ -48,6 +48,11 @@ Route::group(['before' => 'oauth'], function()
 		'uses' => 'Auth\AuthenticationController@logout'
 	]);
 
+	Route::get('restaurants/{id}', [
+		'as' => 'restaurants.find',
+		'uses' => 'RestaurantsController@show'
+	]);
+
 	Route::post('restaurants/create',[
 		'as' => 'restaurants.create',
 		'uses' => 'RestaurantsController@create'
