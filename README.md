@@ -29,6 +29,8 @@ Make sure to place the `~/.composer/vendor/bin` directory in your PATH so the `h
 
 Once it is installed, run the `init` command to create the `Homestead.yaml` configuration file.
 
+`homestead init`
+
 Open the `Homestead.yaml` file for editing by
 
 `homestead edit`
