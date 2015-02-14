@@ -33,7 +33,7 @@ Open the `Homestead.yaml` file for editing by
 
 `homestead edit`
 
-### Set your SSH KEy
+### Set your SSH Key
 
 ```
 authorize: ~/.ssh/id_rsa.pub
@@ -65,13 +65,19 @@ sites:
 
 Open your `hosts` file and add a new domain pointing to the localhost.
 
-`vi /etc/hosts`
+```
+vi /etc/hosts
+```
 
-`127.0.0.1 middach.dev`
+```
+127.0.0.1 middach.dev
+```
 
 ### Start homestead
 
-`homestead up`
+```
+homestead up
+```
 
 Once the virtual machine is started, you can access the site via a webbrowser
 
@@ -81,7 +87,7 @@ Once the virtual machine is started, you can access the site via a webbrowser
 
 ![](http://new.tinygrab.com/3f6ff94c6d7b165373151b858f4d8a246ad77527b0.png)
 
-*Host:* 127.0.0.1
+*Host:* 127.0.0.1  
 *Benutzer:* Homestead _or_ root  
 *Passwort:* secret  
 *Port:* 33060  
@@ -109,29 +115,34 @@ DB_NAME<the name of the database you created>
 ## 2. Composer install
 
 Log into your VM by
- 
-`ssh vagrant@127.0.0.1 -p 2222`  
+
+```
+ssh vagrant@127.0.0.1 -p 2222
+```
 
 (You can also add an alias to your `.bash_profile` so you dont have to retype this everytime.  
 
-`alias vm=ssh vagrant@127.0.0.1 -p 2222`  
+```
+alias vm=ssh vagrant@127.0.0.1 -p 2222
+``` 
 
 ### Composer Packages installieren
 
 _Before the first installation you need a GitHub API Token from my account, so that composer can access the two packages which are in a private repository by now. Just contact me._
 
-`cd /path/to/your/projects/middach_api`  
-`composer install`  
-`composer update`
+```
+cd /path/to/your/projects/middach_api
+composer install
+composer update
+```
 
 
 ## 3. Migrations and seeds
 
-Datenbank-Migrationen ausführen
-
-`php artisan migrate`  
-`php artisan db:seed`
-
+```
+php artisan migrate  
+php artisan db:seed  
+```
 
 
 Now you're ready to hack!
