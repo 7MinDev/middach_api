@@ -9,6 +9,17 @@ Current Build Status (develop Branch): [![Build Status](https://travis-ci.org/7M
 
 (I recommend to work with vagrant and the laravel homestead box. You're saving time setting up & configuring a complete LAMP stack)
 
+### Composer
+
+Install [Composer]()
+
+```bash
+curl -sS https://getcomposer.org/installer | php
+mv composer.phar /usr/local/bin/composer
+```
+
+(Run the `mv` line as super user if you get permission denied errors)
+
 ### VirtualBox
 Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads). 
 
