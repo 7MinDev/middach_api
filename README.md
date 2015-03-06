@@ -111,7 +111,7 @@ Create a new database with a arbitrary name (or just `middach`) and if you want 
 
 ### Database credential configuration
 
-Create a file with the name `.env` in the project root directory (or copy the `.env.example file and rename it) 
+Create a file with the name `.env` in the project root directory (or copy the `.env.example` file and rename it) 
 and add your database credentials to that file.
 
 
@@ -121,8 +121,8 @@ APP_DEBUG=true
 
 DB_HOST=localhost
 DB_USER=<dbusername or root/Homestead>
-DB_PASS=<dbpassword oder secret>
-DB_NAME<the name of the database you created>
+DB_PASS=<dbpassword or secret>
+DB_NAME=<the name of the database you created>
 ```
 
 ## 2. Composer install
