@@ -133,11 +133,17 @@ Log into your VM by
 ssh vagrant@127.0.0.1 -p 2222
 ```
 
-(You can also add an alias to your `.bash_profile` so you dont have to retype this everytime.  
+You can also add an alias to your `.bash_profile` so you dont have to retype this everytime.  
 
 ```
 alias vm=ssh vagrant@127.0.0.1 -p 2222
 ``` 
+
+Then you can connect to your virtual machine just by typing:
+
+```
+vm
+```
 
 ### Composer Packages installieren
 
