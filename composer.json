@@ -6,8 +6,8 @@
 	"type": "project",
 	"require": {
 		"laravel/framework": "5.0.*",
-		"cartalyst/sentinel": "dev-feature/laravel-5",
-		"lucadegasperi/oauth2-server-laravel": "4.*",
+		"cartalyst/sentinel": "2.0.*",
+		"lucadegasperi/oauth2-server-laravel": "4.0.x@dev",
 		"guzzlehttp/guzzle": "~4.0"
 	},
 	"require-dev": {
@@ -32,7 +32,8 @@
 	},
 	"autoload-dev": {
 		"classmap": [
-			"tests/TestCase.php"
+			"tests/TestCase.php",
+			"tests/AuthTestCase.php"
 		]
 	},
 	"scripts": {

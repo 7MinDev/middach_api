@@ -20,7 +20,8 @@ use Reminder;
  * @author pschmidt
  */
 
-class AuthenticationController extends Controller {
+class AuthenticationController extends Controller
+{
 
 	/**
 	 * @var Authorizer

@@ -23,4 +23,5 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 		Artisan::call('db:seed');
 		Mail::pretend(true);
 	}
+
 }

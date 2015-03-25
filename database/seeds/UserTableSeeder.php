@@ -9,9 +9,7 @@ class UserTableSeeder extends Seeder {
 
 	public function run()
 	{
-		DB::table('users')->truncate();
-
-		$credentials = [
+		$credentials1 = [
 			'email' => 'testuser@test.de',
 			'password' => 'test',
 			'username' => 'testuser',
@@ -19,6 +17,15 @@ class UserTableSeeder extends Seeder {
 			'last_name' => 'User',
 		];
 
-		Sentinel::registerAndActivate($credentials);
+		$credentials2 = [
+			'email' => 'testuser2@test.de',
+			'password' => 'test2',
+			'username' => 'testuser2',
+			'first_name' => 'Test',
+			'last_name' => 'User 2'
+		];
+
+		Sentinel::registerAndActivate($credentials1);
+		Sentinel::registerAndActivate($credentials2);
 	}
 }

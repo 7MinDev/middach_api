@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder {
 
 		$this->call('UserTableSeeder');
 		$this->call('OAuthTableSeeder');
+		$this->call('RestaurantTableSeeder');
+		$this->call('OpeningTimesTableSeeder');
 	}
 
 }
