@@ -50,7 +50,6 @@ class RestaurantsRepositoryTest extends TestCase
 	 */
 	public function should_create_a_new_restaurant()
 	{
-
 		$restaurant_data = [
 			'user_id' => 1,
 			'name' => 'Subway',
@@ -64,5 +63,41 @@ class RestaurantsRepositoryTest extends TestCase
 
 		$this->assertTrue(!empty($result), 'findById()-result is empty');
 		$this->assertEquals($new_restaurant->id, $result->id, 'ids do not match');
+	}
+
+	/**
+	 *
+	 * @test
+	 */
+	public function should_update_the_name_of_a_restaurant()
+	{
+		$data = [
+			'name' => 'Super Test Restaurant'
+		];
+
+		$restaurant = $this->repository->update(1, $data);
+
+		$this->assertTrue($restaurant instanceof Restaurant,
+			'$restaurant is not an instance of Restaurant');
+
+		$this->assertEquals($data['name'], $restaurant->name,
+			'Name was not updated');
+	}
+
+	/**
+	 *
+	 * @test
+	 */
+	public function should_delete_a_restaurant_and_all_its_opening_times()
+	{
+		$this->repository->delete(1);
+		$restaurant = $this->repository->findById(1);
+
+		$openingTimesRepository = App::make('App\Repositories\OpeningTimeRepository');
+
+		$openingTimes = $openingTimesRepository->findAllByRestaurantId(1);
+
+		$this->assertEmpty($restaurant, '$restaurant is not empty.');
+		$this->assertEmpty($openingTimes);
 	}
 }

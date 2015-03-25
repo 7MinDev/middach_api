@@ -53,14 +53,34 @@ Route::group(['before' => 'oauth'], function()
 		'uses' => 'Auth\AuthenticationController@logout'
 	]);
 
-	Route::post('restaurants/create',[
+	Route::post('restaurants/create', [
 		'as' => 'restaurants.create',
 		'uses' => 'Admin\RestaurantsController@create'
+	]);
+
+	Route::put('restaurants/update/{id}', [
+		'as' => 'restaurants.update',
+		'uses' => 'Admin\RestaurantsController@update'
+	]);
+
+	Route::delete('restaurants/delete/{id}', [
+		'as' => 'restaurants.delete',
+		'uses' => 'Admin\RestaurantsController@delete'
 	]);
 
 	Route::post('restaurants/opening_time/create', [
 		'as' => 'restaurants.opening_time.create',
 		'uses' => 'Admin\OpeningTimesController@create'
+	]);
+
+	Route::put('restaurants/opening_time/update/{id}', [
+		'as' => 'restaurants.opening_time.update',
+		'uses' => 'Admin\OpeningTimesController@update'
+	]);
+
+	Route::delete('restaurants/opening_time/delete/{id}', [
+		'as' => 'restaurants.opening_time.delete',
+		'uses' => 'Admin\OpeningTimesController@delete'
 	]);
 });
 

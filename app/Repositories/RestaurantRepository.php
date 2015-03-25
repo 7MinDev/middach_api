@@ -3,6 +3,7 @@
 use App\Models\Restaurant;
 use App\Repositories\Contracts\RestaurantRepositoryContract;
 use App\Repositories\Traits\CallOnUnderlyingModel;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @author pschmidt
@@ -35,7 +36,6 @@ class RestaurantRepository implements RestaurantRepositoryContract
 		return $this->model->find($id);
 	}
 
-
 	/**
 	 * create a new restaurant
 	 *
@@ -46,4 +46,46 @@ class RestaurantRepository implements RestaurantRepositoryContract
 	{
 		return $this->model->create($data);
 	}
+
+	/**
+	 * update a restaurant
+	 *
+	 * @param $id
+	 * @param $data
+	 * @return mixed
+	 */
+	public function update($id, $data)
+	{
+		$restaurant = $this->findById($id);
+
+		if (!$restaurant || empty($restaurant))
+		{
+			throw new NotFoundHttpException;
+		}
+
+		$restaurant->fill($data);
+		$restaurant->save();
+
+		return $restaurant;
+	}
+
+	/**
+	 * delete a restaurant with the given id
+	 *
+	 * @param $id
+	 * @return bool
+	 */
+	public function delete($id)
+	{
+		$restaurant = $this->findById($id);
+
+		if ($restaurant->delete())
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+
 }

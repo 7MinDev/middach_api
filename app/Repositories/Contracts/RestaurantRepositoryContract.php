@@ -21,4 +21,21 @@ interface RestaurantRepositoryContract {
 	 * @return mixed
 	 */
 	public function create($data);
+
+	/**
+	 * update a restaurant
+	 *
+	 * @param $id
+	 * @param $data
+	 * @return mixed
+	 */
+	public function update($id, $data);
+
+	/**
+	 * delete a restaurant with the given id
+	 *
+	 * @param $id
+	 * @return mixed
+	 */
+	public function delete($id);
 }

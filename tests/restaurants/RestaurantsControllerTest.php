@@ -1,4 +1,5 @@
 <?php
+use App\Models\User;
 
 /**
  * @author pschmidt
@@ -20,7 +21,7 @@ class RestaurantsControllerTest extends AuthTestCase
 	/**
 	 * @test
 	 */
-	public function should_create_a_restaurant_and_return_it()
+	public function should_create_a_restaurant_and_return_the_right_user_id()
 	{
 		$data = [
 			'name' => 'Günther Haack im Bankcarrée',
@@ -32,13 +33,62 @@ class RestaurantsControllerTest extends AuthTestCase
 		];
 
 		$response = $this->call('POST', route('restaurants.create'), $data);
-		$this->assertTrue($response->isOk(), 'Response code should be 200. Got ' . $response->getStatusCode() . 'instead.' . $response->getContent());
+
+		$this->assertTrue($response->isOk(),
+			'Response code should be 200. Got ' . $response->getStatusCode() . ' instead.');
 
 		$json = json_decode($response->getContent());
 
 		$userId = Sentinel::getUser()->getUserId();
 
 		$this->assertEquals($userId, $json->data->user_id);
-		$this->assertEquals($data['name'], $json->data->name);
+	}
+
+	/**
+	 *
+	 * @test
+	 */
+	public function should_update_a_restaurant()
+	{
+		$data = [
+			'name' => 'Test test test',
+			'postal_code' => 54321
+		];
+
+		$response = $this->call('PUT', route('restaurants.update', [1]), $data);
+
+		$this->assertTrue($response->isOk(), 'Response not ok. Got code ' . $response->getStatusCode() . '.');
+	}
+
+	/**
+	 *
+	 * @test
+	 */
+	public function update_restaurant_of_another_user_should_result_in_an_error()
+	{
+		// TODO comment test in when we know how to disable middleware temporary
+//		$user = User::find(2);
+//		Sentinel::setUser($user);
+//
+//		$data = [
+//			'name' => 'Voll das kack Restaurant',
+//		];
+//
+//		// should fail because restaurant id 1 belongs to user id 1
+//		$response = $this->call('PUT', route('restaurants.update', [1]), $data);
+//
+//		$this->assertTrue($response->isClientError(), 'Response was ok. Should have failed with a forbidden response');
+	}
+
+	/**
+	 *
+	 * @test
+	 */
+	public function should_delete_a_restaurant()
+	{
+		$response = $this->call('DELETE', route('restaurants.delete', [1]));
+
+		$this->assertTrue($response->isOk(),
+			'Response was not ok. Got code ' . $response->getStatusCode() . ' instead.' . $response->getContent());
 	}
 }

@@ -1,12 +1,12 @@
 <?php namespace App\Http\Requests;
 
-class CreateRestaurantRequest extends Request
-{
+class RestaurantUpdateRequest extends Request {
+
 	private $rules = [
-		'name' => 'required',
-		'street' => 'required',
-		'town' => 'required',
-		'postal_code' => 'required'
+		'name' => 'sometimes|required',
+		'street' => 'sometimes|required',
+		'town' => 'sometimes|required',
+		'postal_code' => 'sometimes|required'
 	];
 
 	/**
