@@ -1,7 +1,7 @@
 <?php
+
 use App\Models\Restaurant;
 use App\Models\User;
-use App\Repositories\RestaurantRepository;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -19,8 +19,8 @@ class RestaurantsRepositoryTest extends TestCase
 	 */
 	public function setUp()
 	{
-		$this->repository = App::make(RestaurantRepository::class);
 		parent::setUp();
+		$this->repository = App::make('App\Repositories\RestaurantRepository');
 	}
 
 	/**
