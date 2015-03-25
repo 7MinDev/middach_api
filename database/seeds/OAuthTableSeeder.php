@@ -37,11 +37,12 @@ class OAuthTableSeeder extends Seeder
 			'insert into oauth_clients (id, secret, name, created_at, updated_at) values (?, ?, ?, ?, ?)',
 			$testClient);
 
+		DB::insert('insert into oauth_sessions (id, client_id, owner_type, owner_id, created_at, updated_at) values(?, ?, ?, ?, DATE ("now"), DATE ("now"))',
+			$testSession);
+		
 		DB::insert('insert into oauth_access_tokens (id, session_id, expire_time, created_at, updated_at) values (?, ?, ?, date("now"), DATE("now"))',
 			$testToken);
 
-		DB::insert('insert into oauth_sessions (id, client_id, owner_type, owner_id, created_at, updated_at) values(?, ?, ?, ?, DATE ("now"), DATE ("now"))',
-			$testSession);
 	}
 
 

@@ -1,15 +1,14 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\Admin;
+
+use App\Http\Requests\CreateRestaurantRequest;
+use App\Repositories\Contracts\RestaurantRepositoryContract;
+use Response;
+
 /**
  * @author pschmidt
  */
-
-use App\Repositories\Contracts\RestaurantRepositoryContract;
-use Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
 class RestaurantsController extends BaseController
 {
-
 	/**
 	 * @var RestaurantRepositoryContract
 	 */
@@ -25,23 +24,17 @@ class RestaurantsController extends BaseController
 	}
 
 	/**
-	 * @param null $restaurantId
+	 * @param CreateRestaurantRequest $request
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function show($restaurantId = null)
+	public function create(CreateRestaurantRequest $request)
 	{
-		if ($restaurantId == null)
-		{
-			return Response::json([
-				'status' => 'error',
-				'message' => 'restaurantId param is missing'
-			], JsonResponse::HTTP_BAD_REQUEST);
-		}
+		$data = $request->all();
 
-		$restaurant = $this->restaurant->findById($restaurantId);
+		$data['user_id'] = $this->userId;
 
 		return Response::json([
 			'status' => 'ok',
-			'data' => $restaurant]);
+			'data' => $this->restaurant->create($data)]);
 	}
 }

@@ -38,6 +38,7 @@ class CreateRestaurantsTable extends Migration {
 			$table->integer('day_of_week');
 			$table->time('opening_time');
 			$table->time('closing_time');
+			$table->timestamps();
 		});
 
 		Schema::create('opening_times_overrides', function(Blueprint $table)
@@ -51,6 +52,7 @@ class CreateRestaurantsTable extends Migration {
 			$table->integer('day_of_week');
 			$table->time('opening_time');
 			$table->time('closing_time');
+			$table->timestamps();
 		});
 	}
 
@@ -63,19 +65,19 @@ class CreateRestaurantsTable extends Migration {
 	{
 		Schema::table('opening_times_overrides', function(Blueprint $table)
 		{
-			$table->dropForeign('restaurant_id');
+			$table->dropForeign('opening_times_overrides_restaurant_id_foreign');
 		});
 		Schema::drop('opening_times_overrides');
 
 		Schema::table('opening_times', function(Blueprint $table)
 		{
-			$table->dropForeign('restaurant_id');
+			$table->dropForeign('opening_times_restaurant_id_foreign');
 		});
 		Schema::drop('opening_times');
 
 		Schema::table('restaurants', function(Blueprint $table)
 		{
-			$table->dropForeign('user_id');
+			$table->dropForeign('restaurants_user_id_foreign');
 		});
 		Schema::drop('restaurants');
 	}

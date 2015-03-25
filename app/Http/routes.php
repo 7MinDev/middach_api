@@ -36,6 +36,11 @@ Route::post('processReset', [
 	'uses' => 'Auth\AuthenticationController@processReset'
 ]);
 
+Route::get('restaurants/{id}', [
+	'as' => 'restaurants.find',
+	'uses' => 'RestaurantsController@show'
+]);
+
 /*
  * Private routes that need authentication
  *
@@ -48,14 +53,14 @@ Route::group(['before' => 'oauth'], function()
 		'uses' => 'Auth\AuthenticationController@logout'
 	]);
 
-	Route::get('restaurants/{id}', [
-		'as' => 'restaurants.find',
-		'uses' => 'RestaurantsController@show'
-	]);
-
 	Route::post('restaurants/create',[
 		'as' => 'restaurants.create',
-		'uses' => 'RestaurantsController@create'
+		'uses' => 'Admin\RestaurantsController@create'
+	]);
+
+	Route::post('restaurants/opening_time/create', [
+		'as' => 'restaurants.opening_time.create',
+		'uses' => 'Admin\OpeningTimesController@create'
 	]);
 });
 
