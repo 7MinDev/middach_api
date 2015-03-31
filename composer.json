@@ -33,7 +33,7 @@
 	"autoload-dev": {
 		"classmap": [
 			"tests/TestCase.php",
-			"tests/AuthTestCase.php"
+			"tests/ControllerTestCase.php"
 		]
 	},
 	"scripts": {

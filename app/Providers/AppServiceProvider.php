@@ -32,6 +32,10 @@ class AppServiceProvider extends ServiceProvider {
 		$this->app->bind(
 			'App\Repositories\Contracts\OpeningTimeRepositoryContract',
 			'App\Repositories\OpeningTimeRepository');
+
+		$this->app->bind(
+			'App\Repositories\Contracts\MenuRepositoryContract',
+			'App\Repositories\MenuRepository');
 	}
 
 }

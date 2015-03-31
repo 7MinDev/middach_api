@@ -1,12 +1,12 @@
 <?php 
 
 /**
- * Base Testcase for all tests that need the authorization header
+ * Base Testcase for all tests that need the authorization header (controllers)
  * because i dont have a clue how to disable middleware
  *
  * @author pschmidt
  */
-class AuthTestCase extends TestCase {
+class ControllerTestCase extends TestCase {
 
 	private $access_token = 'oj1zALA5emd42XmmzbJRMSmO8ClRBySPuzcHlvvA';
 

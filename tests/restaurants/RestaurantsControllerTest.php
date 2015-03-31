@@ -1,11 +1,9 @@
 <?php
-use App\Models\User;
 
 /**
  * @author pschmidt
  */
-
-class RestaurantsControllerTest extends AuthTestCase
+class RestaurantsControllerTest extends ControllerTestCase
 {
 	/**
 	 * @test
@@ -61,23 +59,24 @@ class RestaurantsControllerTest extends AuthTestCase
 	}
 
 	/**
+	 * TODO comment test in when we know how to disable middleware temporarily
 	 *
-	 * @test
+	 * test
 	 */
 	public function update_restaurant_of_another_user_should_result_in_an_error()
 	{
-		// TODO comment test in when we know how to disable middleware temporary
-//		$user = User::find(2);
-//		Sentinel::setUser($user);
-//
-//		$data = [
-//			'name' => 'Voll das kack Restaurant',
-//		];
-//
-//		// should fail because restaurant id 1 belongs to user id 1
-//		$response = $this->call('PUT', route('restaurants.update', [1]), $data);
-//
-//		$this->assertTrue($response->isClientError(), 'Response was ok. Should have failed with a forbidden response');
+
+		$user = User::find(2);
+		Sentinel::setUser($user);
+
+		$data = [
+			'name' => 'Voll das kack Restaurant',
+		];
+
+		// should fail because restaurant id 1 belongs to user id 1
+		$response = $this->call('PUT', route('restaurants.update', [1]), $data);
+
+		$this->assertTrue($response->isClientError(), 'Response was ok. Should have failed with a forbidden response');
 	}
 
 	/**

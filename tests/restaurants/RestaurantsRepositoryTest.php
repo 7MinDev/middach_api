@@ -58,11 +58,10 @@ class RestaurantsRepositoryTest extends TestCase
 			'postal_code' => '34117'
 		];
 
-		$new_restaurant = $this->repository->create($restaurant_data);
-		$result = $this->repository->findById($new_restaurant->id);
+		$restaurant = $this->repository->create($restaurant_data);
 
-		$this->assertTrue(!empty($result), 'findById()-result is empty');
-		$this->assertEquals($new_restaurant->id, $result->id, 'ids do not match');
+		$this->assertNotEmpty($restaurant, '$restaurant is empty');
+		$this->assertTrue($restaurant instanceof Restaurant);
 	}
 
 	/**

@@ -48,4 +48,12 @@ class User extends EloquentUser {
 		return $this->hasMany(Restaurant::class, 'user_id');
 	}
 
+	/**
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function menus()
+	{
+		return $this->hasMany(Menu::class, 'user_id');
+	}
 }

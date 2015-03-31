@@ -1,4 +1,5 @@
 <?php
+
 use App\Models\OpeningTime;
 use Illuminate\Database\Seeder;
 

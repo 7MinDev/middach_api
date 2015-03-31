@@ -82,5 +82,20 @@ Route::group(['before' => 'oauth'], function()
 		'as' => 'restaurants.opening_time.delete',
 		'uses' => 'Admin\OpeningTimesController@delete'
 	]);
+
+	Route::post('restaurants/menus/create', [
+		'as' => 'restaurants.menus.create',
+		'uses' => 'Admin\MenusController@create'
+	]);
+
+	Route::put('restaurants/menus/update/{id}', [
+		'as' => 'restaurants.menus.update',
+		'uses' => 'Admin\MenusController@update'
+	]);
+
+	Route::delete('restaurants/menus/delete/{id}', [
+		'as' => 'restaurants.menus.delete',
+		'uses' => 'Admin\MenusController@delete'
+	]);
 });
 

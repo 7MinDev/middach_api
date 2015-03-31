@@ -1,8 +1,9 @@
 <?php
+
 /**
  * @author pschmidt
  */
-class OpeningTimesControllerTest extends AuthTestCase
+class OpeningTimesControllerTest extends ControllerTestCase
 {
 
 	/**
