@@ -1,6 +1,7 @@
 <?php
 
 /**
+ *
  * @author pschmidt
  */
 class RestaurantsControllerTest extends ControllerTestCase
@@ -10,9 +11,14 @@ class RestaurantsControllerTest extends ControllerTestCase
 	 */
 	public function find_restaurant_should_return_a_http_ok()
 	{
+		$mock = Mockery::mock('App\Repositories\Contracts\RestaurantRepositoryContract');
+		$mock->shouldReceive('findById')
+			->once()
+			->andReturn();
+		App::instance('App\Repositories\Contracts\RestaurantRepositoryContract', $mock);
+
 		$response = $this->call('GET', route('restaurants.find', [1]));
 
-		$this->setIgnoreAuthorization(true);
 		$this->assertTrue($response->isOk(), $response->getContent());
 	}
 
@@ -30,32 +36,44 @@ class RestaurantsControllerTest extends ControllerTestCase
 			'website' => 'http://www.meisterkoch-haack.de/',
 		];
 
+		$mock = Mockery::mock('App\Repositories\Contracts\RestaurantRepositoryContract');
+		$mock->shouldReceive('create')
+			->once()
+			->andReturn();
+		App::instance('App\Repositories\Contracts\RestaurantRepositoryContract', $mock);
+
 		$response = $this->call('POST', route('restaurants.create'), $data);
 
 		$this->assertTrue($response->isOk(),
 			'Response code should be 200. Got ' . $response->getStatusCode() . ' instead.');
-
-		$json = json_decode($response->getContent());
-
-		$userId = Sentinel::getUser()->getUserId();
-
-		$this->assertEquals($userId, $json->data->user_id);
 	}
 
 	/**
 	 *
 	 * @test
 	 */
-	public function should_update_a_restaurant()
+	public function should_update_a_restaurant_and_return_with_a_http_ok()
 	{
 		$data = [
 			'name' => 'Test test test',
 			'postal_code' => 54321
 		];
 
+		// TODO
+//		$mock = Mockery::mock('App\Repositories\Contracts\RestaurantRepositoryContract');
+//		$mock->shouldReceive('update')
+//			->once()
+//			->andReturn();
+//
+//		$mock->shouldReceive('findById')
+//			->once()
+//			->andReturn();
+//
+//		App::instance('App\Repositories\Contracts\RestaurantRepositoryContract', $mock);
+
 		$response = $this->call('PUT', route('restaurants.update', [1]), $data);
 
-		$this->assertTrue($response->isOk(), 'Response not ok. Got code ' . $response->getStatusCode() . '.');
+		$this->assertTrue($response->isOk(), 'Response not ok. Got code ' . $response->getStatusCode() . ' instead.');
 	}
 
 	/**
@@ -65,7 +83,6 @@ class RestaurantsControllerTest extends ControllerTestCase
 	 */
 	public function update_restaurant_of_another_user_should_result_in_an_error()
 	{
-
 		$user = User::find(2);
 		Sentinel::setUser($user);
 
@@ -83,8 +100,17 @@ class RestaurantsControllerTest extends ControllerTestCase
 	 *
 	 * @test
 	 */
-	public function should_delete_a_restaurant()
+	public function should_delete_a_restaurant_and_return_with_a_http_ok()
 	{
+		// TODO
+//		$mock = Mockery::mock('App\Repositories\Contracts\RestaurantRepositoryContract');
+//		$mock->shouldReceive('delete')
+//			->once()
+//			->andReturn(true);
+//		$mock->shouldReceive('findById')
+//			->once();
+//		App::instance('App\Repositories\Contracts\RestaurantRepositoryContract', $mock);
+
 		$response = $this->call('DELETE', route('restaurants.delete', [1]));
 
 		$this->assertTrue($response->isOk(),

@@ -72,4 +72,28 @@ class MenuRepository implements MenuRepositoryContract
 
 		return false;
 	}
+
+	/**
+	 * @param $id
+	 * @return mixed
+	 */
+	public function copy($id)
+	{
+		/**
+		 * @var $menu Menu
+		 */
+		$menu = $this->findById($id);
+
+		/**
+		 * @var $copy Menu
+		 */
+		$copy = new Menu();
+		$copy->name = $menu->name;
+		$copy->user_id = $menu->user_id;
+		$copy->save();
+
+		return $copy;
+	}
+
+
 }

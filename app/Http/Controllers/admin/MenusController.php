@@ -101,4 +101,37 @@ class MenusController extends BaseController
 			'status' => 'ok',
 		]);
 	}
+
+	/**
+	 * @param $id
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function copy($id)
+	{
+		$userId = Sentinel::getUser()->getUserId();
+		$menu = $this->repository->findById($id);
+
+		if ($menu->user->id != $userId)
+		{
+			return Response::json([
+				'status' => 'error',
+				'message' => 'Menus User ID does not match the current user.'
+			], Status::HTTP_FORBIDDEN);
+		}
+
+		if ($menu == null || empty($menu))
+		{
+			return Response::json([
+				'status' => 'error',
+				'message' => 'Menu does not exist.'
+			], Status::HTTP_BAD_REQUEST);
+		}
+
+		$copy = $this->repository->copy($id);
+
+		return Response::json([
+			'status' => 'ok',
+			'data' => $copy
+		]);
+	}
 }

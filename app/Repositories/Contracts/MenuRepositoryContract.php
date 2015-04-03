@@ -28,4 +28,10 @@ interface MenuRepositoryContract
 	 * @return mixed
 	 */
 	public function delete($id);
+
+	/**
+	 * @param $id
+	 * @return mixed
+	 */
+	public function copy($id);
 }

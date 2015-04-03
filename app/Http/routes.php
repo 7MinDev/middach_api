@@ -97,5 +97,10 @@ Route::group(['before' => 'oauth'], function()
 		'as' => 'restaurants.menus.delete',
 		'uses' => 'Admin\MenusController@delete'
 	]);
+
+	Route::post('restaurants/menus/copy/{id}', [
+		'as' => 'restaurants.menus.copy',
+		'uses' => 'Admin\MenusController@copy'
+	]);
 });
 

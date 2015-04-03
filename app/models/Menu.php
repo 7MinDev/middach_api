@@ -7,9 +7,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Menu extends Model
 {
-	protected $fillable = [
-		'name',
-	];
+	/**
+	 * @var array
+	 */
+	protected $fillable = ['name'];
+
+	/**
+	 * @var array
+	 */
+	protected $guarded = ['id'];
 
 	/**
 	 *

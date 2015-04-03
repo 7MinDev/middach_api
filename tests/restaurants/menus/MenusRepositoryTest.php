@@ -68,4 +68,18 @@ class MenusRepositoryTest extends TestCase
 
 		$this->assertEmpty($menu, 'Menu is not empty, so it was not deleted.');
 	}
+
+	/**
+	 *
+	 * @test
+	 */
+	public function should_copy_a_menu_and_return_it()
+	{
+		$menu = $this->repository->copy(1);
+
+		$this->assertEquals($menu->user_id, 1);
+		$this->assertEquals($menu->name, 'Menu #1');
+		$this->assertNotEquals($menu->id, 1);
+		$this->assertNotEquals($menu->id, 2);
+	}
 }
