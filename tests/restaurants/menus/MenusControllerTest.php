@@ -18,6 +18,10 @@ class MenusControllerTest extends ControllerTestCase
 		];
 
 		$mock = Mockery::mock('App\Repositories\Contracts\MenuRepositoryContract');
+		$mock->shouldReceive('create')
+			->once()
+			->andReturn();
+		App::instance('App\Repositories\Contracts\MenuRepositoryContract', $mock);
 
 		$response = $this->call('POST', route('restaurants.menus.create'), $data);
 
