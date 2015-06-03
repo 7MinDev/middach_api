@@ -17,13 +17,25 @@ class ControllerTestCase extends TestCase {
 	{
 		parent::setUp();
 
-		/**
-		 * @var $user User
-		 */
-		$user = User::find(1);
-		Sentinel::setUser($user);
+		if ($this->ignore_authorization)
+		{
+			/**
+			 * @var $user User
+			 */
+			$user = User::find(1);
+			Sentinel::setUser($user);
+		}
 	}
 
+	public function call($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+	{
+		if (!$this->ignore_authorization)
+		{
+			$server['HTTP_Authorization'] = 'Bearer ' . $this->access_token;
+		}
+
+		return parent::call($method, $uri, $parameters, $cookies, $files, $server, $content);
+	}
 
 	/**
 	 * @param boolean $ignore_authorization
