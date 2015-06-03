@@ -71,9 +71,9 @@ class MenusControllerTest extends ControllerTestCase
 	}
 
 	/**
-	 * complete test annotation as soon as i know how to disable middleware
+	 * TODO complete test annotation as soon as i know how to disable middleware
 	 *
-	 * @test
+	 * test
 	 */
 	public function edit_should_return_with_a_client_error_because_user_ids_do_not_match()
 	{
@@ -93,8 +93,8 @@ class MenusControllerTest extends ControllerTestCase
 	}
 
 	/**
-	 *
-	 * @test
+	 * TODO complete test annotation as soon as i know how to disable middleware
+	 * test
 	 */
 	public function copy_should_return_with_a_http_ok()
 	{
