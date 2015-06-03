@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder {
 		$this->call('RestaurantTableSeeder');
 		$this->call('OpeningTimesTableSeeder');
 		$this->call('MenusTableSeeder');
+		$this->call('FoodsTableSeeder');
 	}
 
 }

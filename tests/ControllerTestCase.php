@@ -1,4 +1,5 @@
-<?php 
+<?php
+use App\Models\User;
 
 /**
  * Base Testcase for all tests that need the authorization header (controllers)
@@ -12,15 +13,17 @@ class ControllerTestCase extends TestCase {
 
 	protected $ignore_authorization = false;
 
-	public function call($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+	public function setUp()
 	{
-		if (!$this->ignore_authorization)
-		{
-			$server['HTTP_Authorization'] = 'Bearer ' . $this->access_token;
-		}
+		parent::setUp();
 
-		return parent::call($method, $uri, $parameters, $cookies, $files, $server, $content);
+		/**
+		 * @var $user User
+		 */
+		$user = User::find(1);
+		Sentinel::setUser($user);
 	}
+
 
 	/**
 	 * @param boolean $ignore_authorization

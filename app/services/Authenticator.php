@@ -64,7 +64,6 @@ class Authenticator {
 		DB::table('oauth_sessions')
 			->delete($result->session_id);
 
-		// todo maybe a check and returning false if something gone wrong?
 		return true;
 	}
 }

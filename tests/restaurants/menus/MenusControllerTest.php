@@ -56,7 +56,7 @@ class MenusControllerTest extends ControllerTestCase
 	/**
 	 * complete test annotation as soon as i know how to disable middleware
 	 *
-	 * test
+	 * @test
 	 */
 	public function delete_should_return_with_a_client_error_because_user_ids_do_not_match()
 	{
@@ -73,7 +73,7 @@ class MenusControllerTest extends ControllerTestCase
 	/**
 	 * complete test annotation as soon as i know how to disable middleware
 	 *
-	 * test
+	 * @test
 	 */
 	public function edit_should_return_with_a_client_error_because_user_ids_do_not_match()
 	{
@@ -81,7 +81,6 @@ class MenusControllerTest extends ControllerTestCase
 		 * @var $wrongUser User
 		 */
 		$wrongUser = User::find(2);
-
 		Sentinel::setUser($wrongUser);
 
 		$data = [
@@ -90,7 +89,7 @@ class MenusControllerTest extends ControllerTestCase
 
 		$response = $this->call('PUT', route('restaurants.menus.update', [1]), $data);
 
-		$this->assertTrue($response->isOk(), 'Response was ok. Menu should not have been updated');
+		$this->assertTrue($response->isClientError(), 'Response was ok. Menu should not have been updated');
 	}
 
 	/**
@@ -99,13 +98,6 @@ class MenusControllerTest extends ControllerTestCase
 	 */
 	public function copy_should_return_with_a_http_ok()
 	{
-		// TODO
-//		$mock = Mockery::mock('App\Repositories\Contracts\MenuRepositoryContract');
-//		$mock->shouldReceive('copy')
-//			->once()
-//			->andReturn();
-//		App::instance('App\Repositories\Contracts\MenuRepositoryContract', $mock);
-
 		$response = $this->call('POST', route('restaurants.menus.copy', [1]));
 
 		$this->assertTrue($response->isOk(), 'Response not ok. Got code ' . $response->getStatusCode() . ' instead.');

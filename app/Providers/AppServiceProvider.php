@@ -1,5 +1,6 @@
 <?php namespace App\Providers;
 
+use App\Http\Controllers\Filter\OAuthFilter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider {
@@ -36,6 +37,10 @@ class AppServiceProvider extends ServiceProvider {
 		$this->app->bind(
 			'App\Repositories\Contracts\MenuRepositoryContract',
 			'App\Repositories\MenuRepository');
+
+		$this->app->bind(
+			'App\Repositories\Contracts\FoodRepositoryContract',
+			'App\Repositories\FoodRepository');
 	}
 
 }

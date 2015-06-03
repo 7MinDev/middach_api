@@ -102,5 +102,15 @@ Route::group(['before' => 'oauth'], function()
 		'as' => 'restaurants.menus.copy',
 		'uses' => 'Admin\MenusController@copy'
 	]);
+
+	Route::post('restaurants/foods/create', [
+		'as' => 'restaurants.foods.create',
+		'uses' => 'Admin\FoodsController@create'
+	]);
+
+	Route::put('restaurants/foods/update/{id}', [
+		'as' => 'restaurants.foods.update',
+		'uses' => 'Admin\FoodsController@update'
+	]);
 });
 
