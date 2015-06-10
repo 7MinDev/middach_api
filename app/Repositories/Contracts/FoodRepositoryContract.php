@@ -21,7 +21,8 @@ interface FoodRepositoryContract
 
 	/**
 	 * @param $id
+     * @param $relations
 	 * @return mixed
 	 */
-	public function findById($id);
+	public function findById($id, $relations = []);
 }

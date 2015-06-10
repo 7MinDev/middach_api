@@ -50,7 +50,7 @@ class OpeningTimeRepository implements OpeningTimeRepositoryContract
 	 */
 	public function findById($id)
 	{
-		return $this->model->find($id);
+		return $this->model->findOrFail($id);
 	}
 
 	/**

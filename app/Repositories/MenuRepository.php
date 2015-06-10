@@ -50,11 +50,17 @@ class MenuRepository implements MenuRepositoryContract
 
 	/**
 	 * @param $id
+     * @param $queryRelations
 	 * @return mixed
 	 */
-	public function findById($id)
+	public function findById($id, $queryRelations = [])
 	{
-		return $this->model->find($id);
+        if (empty($queryRelations))
+        {
+            return $this->model->findOrFail($id);
+        }
+
+        return $this->model->with($queryRelations)->findOrFail($id);
 	}
 
 	/**

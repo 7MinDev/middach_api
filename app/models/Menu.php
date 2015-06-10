@@ -7,22 +7,21 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Menu extends Model
 {
-	/**
-	 * @var array
-	 */
-	protected $fillable = ['name'];
+    /**
+     * @var array
+     */
+    protected $fillable = ['user_id', 'name'];
 
-	/**
-	 * @var array
-	 */
-	protected $guarded = ['id'];
+    /**
+     * @var array
+     */
+    protected $guarded = ['id'];
 
-	/**
-	 *
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-	 */
-	public function user()
-	{
-		return $this->belongsTo(User::class);
-	}
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

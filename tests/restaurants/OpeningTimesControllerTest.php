@@ -11,6 +11,10 @@ class OpeningTimesControllerTest extends ControllerTestCase
 	 */
 	public function should_call_create_method_and_return_with_a_http_ok()
 	{
+        $this->withoutMiddleware();
+
+        Sentinel::setUser(factory(\App\Models\User::class)->make());
+
 		$data = [
 			'restaurant_id' => 1,
 			'day_of_week' => 7,
@@ -35,7 +39,7 @@ class OpeningTimesControllerTest extends ControllerTestCase
 
 	/**
 	 *
-	 * @test
+	 * test
 	 */
 	public function should_call_update_method_and_return_with_a_http_ok()
 	{
@@ -58,7 +62,7 @@ class OpeningTimesControllerTest extends ControllerTestCase
 
 	/**
 	 *
-	 * @test
+	 * test
 	 */
 	public function should_call_delete_method_and_return_with_a_http_ok()
 	{

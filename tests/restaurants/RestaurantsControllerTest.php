@@ -6,60 +6,75 @@
  */
 class RestaurantsControllerTest extends ControllerTestCase
 {
-	/**
-	 * @test
-	 */
-	public function find_restaurant_should_return_a_http_ok()
-	{
-		$mock = Mockery::mock('App\Repositories\Contracts\RestaurantRepositoryContract');
-		$mock->shouldReceive('findById')
-			->once()
-			->andReturn();
-		App::instance('App\Repositories\Contracts\RestaurantRepositoryContract', $mock);
 
-		$response = $this->call('GET', route('restaurants.find', [1]));
+    /**
+     * @test
+     */
+    public function find_restaurant_should_return_a_http_ok()
+    {
+        $mock = Mockery::mock('App\Repositories\Contracts\RestaurantRepositoryContract');
+        $mock->shouldReceive('findById')
+            ->once()
+            ->andReturn();
+        App::instance('App\Repositories\Contracts\RestaurantRepositoryContract', $mock);
 
-		$this->assertTrue($response->isOk(), $response->getContent());
-	}
+        $response = $this->call('GET', route('restaurants.find', [1]));
 
-	/**
-	 * @test
-	 */
-	public function should_create_a_restaurant_and_return_the_right_user_id()
-	{
-		$data = [
-			'name' => 'Günther Haack im Bankcarrée',
-			'street' => 'Rudolf-Schwander-Straße 3',
-			'town' => 'Kassel',
-			'postal_code' => '34117',
-			'description' => 'Günter Haack im bankcarreé. Impressum: Haack Catering, Inh. Günter Haack Meisterkoch, Rudolf-Schwander-Str. 3, 34117 Kassel, Tel. 0561-78931177',
-			'website' => 'http://www.meisterkoch-haack.de/',
-		];
+        $this->assertTrue($response->isOk(), $response->getContent());
+    }
 
-		$mock = Mockery::mock('App\Repositories\Contracts\RestaurantRepositoryContract');
-		$mock->shouldReceive('create')
-			->once()
-			->andReturn();
-		App::instance('App\Repositories\Contracts\RestaurantRepositoryContract', $mock);
+    /**
+     * @test
+     */
+    public function should_create_a_restaurant_and_return_the_right_user_id()
+    {
+        $this->withoutMiddleware();
 
-		$response = $this->call('POST', route('restaurants.create'), $data);
+        Sentinel::setUser(factory(\App\Models\User::class)->make());
 
-		$this->assertTrue($response->isOk(),
-			'Response code should be 200. Got ' . $response->getStatusCode() . ' instead.');
-	}
+        $data = [
+            'name' => 'Günther Haack im Bankcarrée',
+            'street' => 'Rudolf-Schwander-Straße 3',
+            'town' => 'Kassel',
+            'postal_code' => '34117',
+            'description' => 'Günter Haack im bankcarreé. Impressum: Haack Catering, Inh. Günter Haack Meisterkoch, Rudolf-Schwander-Str. 3, 34117 Kassel, Tel. 0561-78931177',
+            'website' => 'http://www.meisterkoch-haack.de/',
+        ];
 
-	/**
-	 *
-	 * @test
-	 */
-	public function should_update_a_restaurant_and_return_with_a_http_ok()
-	{
-		$data = [
-			'name' => 'Test test test',
-			'postal_code' => 54321
-		];
+        $mock = Mockery::mock('App\Repositories\Contracts\RestaurantRepositoryContract');
+        $mock->shouldReceive('create')
+            ->once()
+            ->andReturn();
+        App::instance('App\Repositories\Contracts\RestaurantRepositoryContract', $mock);
 
-		// TODO
+        $response = $this->call('POST', route('restaurants.create'), $data);
+
+        $this->assertTrue($response->isOk(),
+            'Response code should be 200. Got ' . $response->getStatusCode() . ' instead.');
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function should_update_a_restaurant_and_return_with_a_http_ok()
+    {
+        $this->withoutMiddleware();
+        Sentinel::setUser(factory(\App\Models\User::class)->make([
+            'id' => 1
+        ]));
+
+        $data = [
+            'name' => 'Test test test',
+            'postal_code' => 54321
+        ];
+
+        factory(\App\Models\Restaurant::class)->create([
+            'id' => 1,
+            'user_id' => 1
+        ]);
+
+        // TODO
 //		$mock = Mockery::mock('App\Repositories\Contracts\RestaurantRepositoryContract');
 //		$mock->shouldReceive('update')
 //			->once()
@@ -71,38 +86,59 @@ class RestaurantsControllerTest extends ControllerTestCase
 //
 //		App::instance('App\Repositories\Contracts\RestaurantRepositoryContract', $mock);
 
-		$response = $this->call('PUT', route('restaurants.update', [1]), $data);
+        $response = $this->call('PUT', route('restaurants.update', [1]), $data);
+        $this->assertTrue($response->isOk(), 'Response not ok. Got code ' . $response->getStatusCode() . ' instead.');
+    }
 
-		$this->assertTrue($response->isOk(), 'Response not ok. Got code ' . $response->getStatusCode() . ' instead.');
-	}
+    /**
+     * TODO comment test in when we know how to disable middleware temporarily
+     *
+     * test
+     */
+    public function update_restaurant_of_another_user_should_result_in_an_error()
+    {
+        $this->withoutMiddleware();
+        Sentinel::setUser(
+            factory(\App\Models\User::class)->make([
+                'id' => 2
+            ]));
 
-	/**
-	 * TODO comment test in when we know how to disable middleware temporarily
-	 *
-	 * test
-	 */
-	public function update_restaurant_of_another_user_should_result_in_an_error()
-	{
-		$user = User::find(2);
-		Sentinel::setUser($user);
+        factory(\App\Models\User::class)->create([
+            'id' => 1
+        ]);
 
-		$data = [
-			'name' => 'Voll das kack Restaurant',
-		];
+        factory(\App\Models\Restaurant::class)->create([
+            'id' => 1,
+            'user_id' => 1
+        ]);
 
-		// should fail because restaurant id 1 belongs to user id 1
-		$response = $this->call('PUT', route('restaurants.update', [1]), $data);
+        $data = [
+            'name' => 'Voll das kack Restaurant',
+        ];
 
-		$this->assertTrue($response->isClientError(), 'Response was ok. Should have failed with a forbidden response');
-	}
+        // should fail because restaurant id 1 belongs to user id 1
+        $response = $this->call('PUT', route('restaurants.update', [1]), $data);
 
-	/**
-	 *
-	 * @test
-	 */
-	public function should_delete_a_restaurant_and_return_with_a_http_ok()
-	{
-		// TODO
+        $this->assertTrue($response->isClientError(), 'Response was ok. Should have failed with a forbidden response');
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function should_delete_a_restaurant_and_return_with_a_http_ok()
+    {
+        $this->withoutMiddleware();
+        Sentinel::setUser(factory(\App\Models\User::class)->create([
+            'id' => 1
+        ]));
+
+        factory(\App\Models\Restaurant::class)->create([
+            'id' => 1,
+            'user_id' => 1
+        ]);
+
+        // TODO
 //		$mock = Mockery::mock('App\Repositories\Contracts\RestaurantRepositoryContract');
 //		$mock->shouldReceive('delete')
 //			->once()
@@ -111,9 +147,9 @@ class RestaurantsControllerTest extends ControllerTestCase
 //			->once();
 //		App::instance('App\Repositories\Contracts\RestaurantRepositoryContract', $mock);
 
-		$response = $this->call('DELETE', route('restaurants.delete', [1]));
+        $response = $this->call('DELETE', route('restaurants.delete', [1]));
 
-		$this->assertTrue($response->isOk(),
-			'Response was not ok. Got code ' . $response->getStatusCode() . ' instead.' . $response->getContent());
-	}
+        $this->assertTrue($response->isOk(),
+            'Response was not ok. Got code ' . $response->getStatusCode() . ' instead.' . $response->getContent());
+    }
 }

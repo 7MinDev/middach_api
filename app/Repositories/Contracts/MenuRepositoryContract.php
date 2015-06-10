@@ -19,9 +19,10 @@ interface MenuRepositoryContract
 
 	/**
 	 * @param $id
+     * @param $queryRelations
 	 * @return mixed
 	 */
-	public function findById($id);
+	public function findById($id, $queryRelations = []);
 
 	/**
 	 * @param $id

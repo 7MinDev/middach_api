@@ -9,54 +9,63 @@ use App\Repositories\Traits\CallOnUnderlyingModel;
  */
 class FoodRepository implements FoodRepositoryContract
 {
-	use CallOnUnderlyingModel;
+    use CallOnUnderlyingModel;
 
-	/**
-	 * @var Food
-	 */
-	private $model;
+    /**
+     * @var Food
+     */
+    private $model;
 
-	/**
-	 * @param Food $model
-	 */
-	function __construct(Food $model)
-	{
-		$this->model = $model;
-	}
-
-
-	/**
-	 * @param $data
-	 * @return Food
-	 */
-	public function create($data)
-	{
-		$food = $this->model->create($data);
-		return $food;
-	}
-
-	/**
-	 * @param $id
-	 * @return Food
-	 */
-	public function findById($id)
-	{
-		return $this->model->find($id);
-	}
+    /**
+     * @param Food $model
+     */
+    function __construct(Food $model)
+    {
+        $this->model = $model;
+    }
 
 
-	/**
-	 * @param $id
-	 * @param $data
-	 * @return Food
-	 */
-	public function update($id, $data)
-	{
-		$food = $this->findById($id);
+    /**
+     * @param $data
+     * @return Food
+     */
+    public function create($data)
+    {
+        $food = $this->model->create($data);
 
-		$food->fill($data);
-		$food->save();
+        return $food;
+    }
 
-		return $food;
-	}
+    /**
+     * @param $id
+     * @param $relations
+     * @return Food
+     */
+    public function findById($id, $relations = [])
+    {
+        if (empty($relations))
+        {
+            return $this->model->findOrFail($id);
+        }
+
+        return $this->model
+            ->with($relations)
+            ->findOrFail($id);
+    }
+
+
+    /**
+     * @param $id
+     * @param $data
+     * @return Food
+     */
+    public function update($id, $data)
+    {
+        $food = $this->findById($id);
+
+        $food->fill($data);
+        $food->save();
+
+        return $food;
+    }
 }

@@ -46,7 +46,7 @@ Route::get('restaurants/{id}', [
  *
  * Insert Resource routes here!
  */
-Route::group(['before' => 'oauth'], function()
+Route::group(['middleware' => 'oauth'], function()
 {
 	Route::get('logout', [
 		'as' => 'logout',
