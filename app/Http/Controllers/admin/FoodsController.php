@@ -50,13 +50,6 @@ class FoodsController extends BaseController
     {
         $food = $this->repository->findById($id, ['restaurant']);
 
-        if (empty($food) || $food == null) {
-            return Response::json([
-                'status' => 'error',
-                'message' => 'food with id ' . $id . ' not found.'
-            ], Status::HTTP_BAD_REQUEST);
-        }
-
         if ($food->restaurant->user_id != Sentinel::getUser()->getUserId()) {
             return Response::json([
                 'status' => 'error',
