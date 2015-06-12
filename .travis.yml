@@ -14,7 +14,6 @@ env:
     - secure: "lSrZIraq9k6S4HJoW7aKn7+3qiRO+MigOUE9vQMEcxUX8iaqLYPCk/MZJAKKkPZ2ehSzxFUxE6d8+2V+7Gm4Fvv4mSYIWf2aBIK4QcGzcqau+I2radKc0S4YLXuyxeJWzGoAb8eiW2ZWn+KyNNP8kcCqxQ57exOSA+8gONNjCew="
 
 before_script:
-  - travis_retry composer self-update
   - composer config github-oauth.github.com $GITHUB_ACCESS_TOKEN
   - travis_retry composer install --prefer-source --no-interaction
 
