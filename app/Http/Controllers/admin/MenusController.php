@@ -114,13 +114,6 @@ class MenusController extends BaseController
             ], Status::HTTP_FORBIDDEN);
         }
 
-        if ($menu == null || empty($menu)) {
-            return Response::json([
-                'status' => 'error',
-                'message' => 'Menu does not exist.'
-            ], Status::HTTP_BAD_REQUEST);
-        }
-
         $copy = $this->repository->copy($id);
 
         return Response::json([

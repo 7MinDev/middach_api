@@ -1,10 +1,28 @@
 <?php
 
+use App\Models\User;
+
 /**
  * @author pschmidt
  */
-class FoodsControllerTest extends ControllerTestCase
+class FoodsControllerTest extends TestCase
 {
+    /**
+     * @var User
+     */
+    private $user;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        // disable oauth middleware
+        $this->withoutMiddleware();
+
+        // set a logged in user
+        $this->user = factory(User::class)->make();
+        Sentinel::setUser($this->user);
+    }
 
     /**
      *
@@ -15,8 +33,11 @@ class FoodsControllerTest extends ControllerTestCase
      */
     public function create_should_call_create_and_return_with_a_http_ok()
     {
-        $this->withoutMiddleware();
-        Sentinel::setUser(factory(\App\Models\User::class)->make());
+        $foodMock = Mockery::mock('App\Repositories\Contracts\FoodRepositoryContract');
+        $foodMock->shouldReceive('create')
+            ->once()
+            ->andReturn('foo');
+        App::instance('App\Repositories\Contracts\FoodRepositoryContract', $foodMock);
 
         $data = [
             'title' => 'Schnitzel vom Schwein',
@@ -32,27 +53,21 @@ class FoodsControllerTest extends ControllerTestCase
     }
 
     /**
+     *
      * @test
      */
     public function update_should_call_update_and_return_with_a_http_ok()
     {
-        $this->withoutMiddleware();
-        $user = factory(\App\Models\User::class)->make([
-            'id' => 1
-        ]);
+        $food = factory(\App\Models\Food::class)
+            ->make(['id' => 1, 'restaurant_id' => 1])
+            ->restaurant()
+            ->associate(factory(\App\Models\Restaurant::class)
+                ->make(['id' => 1, 'user_id' => $this->user->id]));
 
-        Sentinel::setUser($user);
-
-        /**
-         * @var $restaurant \App\Models\Restaurant
-         */
-        factory(\App\Models\Restaurant::class)
-            ->create(['id' => 1, 'user_id' => $user->id]);
-
-        factory(\App\Models\Food::class)->create([
-            'id' => 1,
-            'restaurant_id' => 1,
-        ]);
+        $foodMock = Mockery::mock('App\Repositories\Contracts\FoodRepositoryContract');
+        $foodMock->shouldReceive('findById')->andReturn($food);
+        $foodMock->shouldReceive('update')->once()->andReturn('Foo');
+        App::instance('App\Repositories\Contracts\FoodRepositoryContract', $foodMock);
 
         $data = [
             'price' => 6.00
