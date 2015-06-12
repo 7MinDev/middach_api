@@ -18,7 +18,10 @@ class BaseController extends Controller
 	 */
 	function __construct()
 	{
-		$this->userId = Authorizer::getResourceOwnerId();
-		Sentinel::setUser(User::find($this->userId)->first());
+		if (Authorizer::getChecker()->getAccessToken() != null)
+		{
+			$this->userId = Authorizer::getResourceOwnerId();
+			Sentinel::setUser(User::find($this->userId)->first());
+		}
 	}
 }

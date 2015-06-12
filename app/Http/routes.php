@@ -46,7 +46,7 @@ Route::get('restaurants/{id}', [
  *
  * Insert Resource routes here!
  */
-Route::group(['before' => 'oauth'], function()
+Route::group(['middleware' => 'oauth'], function()
 {
 	Route::get('logout', [
 		'as' => 'logout',
@@ -81,6 +81,36 @@ Route::group(['before' => 'oauth'], function()
 	Route::delete('restaurants/opening_time/delete/{id}', [
 		'as' => 'restaurants.opening_time.delete',
 		'uses' => 'Admin\OpeningTimesController@delete'
+	]);
+
+	Route::post('restaurants/menus/create', [
+		'as' => 'restaurants.menus.create',
+		'uses' => 'Admin\MenusController@create'
+	]);
+
+	Route::put('restaurants/menus/update/{id}', [
+		'as' => 'restaurants.menus.update',
+		'uses' => 'Admin\MenusController@update'
+	]);
+
+	Route::delete('restaurants/menus/delete/{id}', [
+		'as' => 'restaurants.menus.delete',
+		'uses' => 'Admin\MenusController@delete'
+	]);
+
+	Route::post('restaurants/menus/copy/{id}', [
+		'as' => 'restaurants.menus.copy',
+		'uses' => 'Admin\MenusController@copy'
+	]);
+
+	Route::post('restaurants/foods/create', [
+		'as' => 'restaurants.foods.create',
+		'uses' => 'Admin\FoodsController@create'
+	]);
+
+	Route::put('restaurants/foods/update/{id}', [
+		'as' => 'restaurants.foods.update',
+		'uses' => 'Admin\FoodsController@update'
 	]);
 });
 

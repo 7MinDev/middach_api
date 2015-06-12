@@ -24,6 +24,7 @@ class Kernel extends HttpKernel {
 	 * @var array
 	 */
 	protected $routeMiddleware = [
+        'oauth' => 'App\Http\Middleware\OAuthMiddleware',
 	];
 
 }

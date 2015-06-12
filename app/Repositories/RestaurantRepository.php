@@ -33,7 +33,7 @@ class RestaurantRepository implements RestaurantRepositoryContract
 	 */
 	public function findById($id)
 	{
-		return $this->model->find($id);
+		return $this->model->findOrFail($id);
 	}
 
 	/**

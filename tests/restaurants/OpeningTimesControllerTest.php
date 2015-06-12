@@ -1,15 +1,20 @@
 <?php
+
 /**
  * @author pschmidt
  */
-class OpeningTimesControllerTest extends AuthTestCase
+class OpeningTimesControllerTest extends ControllerTestCase
 {
 
 	/**
 	 * @test
 	 */
-	public function should_create_a_opening_time_for_the_given_restaurant()
+	public function should_call_create_method_and_return_with_a_http_ok()
 	{
+        $this->withoutMiddleware();
+
+        Sentinel::setUser(factory(\App\Models\User::class)->make());
+
 		$data = [
 			'restaurant_id' => 1,
 			'day_of_week' => 7,
@@ -17,19 +22,37 @@ class OpeningTimesControllerTest extends AuthTestCase
 			'closing_time' => '15:00:00'
 		];
 
+		$mock = Mockery::mock('App\Repositories\Contracts\OpeningTimeRepositoryContract');
+		$mock->shouldReceive('create')
+			->once()
+			->andReturn([
+				'id' => 1,
+				'restaurant_id' => 1,
+				'opening_time' => '09:00:00',
+				'closing_time' => '15:00:00'
+			]);
+		App::instance('App\Repositories\Contracts\OpeningTimeRepositoryContract', $mock);
+
 		$response = $this->call('POST', route('restaurants.opening_time.create'), $data);
 		$this->assertTrue($response->isOk(), $response->getContent());
 	}
 
 	/**
 	 *
-	 * @test
+	 * test
 	 */
-	public function should_edit_a_opening_time()
+	public function should_call_update_method_and_return_with_a_http_ok()
 	{
 		$data = [
 			'opening_time' => '08:00:00'
 		];
+
+		$mock = Mockery::mock('App\Repositories\Contracts\OpeningTimeRepositoryContract');
+		$mock->shouldReceive('update')
+			->once()
+			->andReturn('foo');
+
+		App::instance('OpeningTimeRepositoryContract', $mock);
 
 		$response = $this->call('PUT', route('restaurants.opening_time.update', [1]), $data);
 
@@ -39,10 +62,17 @@ class OpeningTimesControllerTest extends AuthTestCase
 
 	/**
 	 *
-	 * @test
+	 * test
 	 */
-	public function should_delete_a_opening_time()
+	public function should_call_delete_method_and_return_with_a_http_ok()
 	{
+		$mock = Mockery::mock('App\Repositories\Contracts\OpeningTimeRepositoryContract');
+		$mock->shouldReceive('delete')
+			->once()
+			->andReturn('foo');
+
+		App::instance('OpeningTimeRepositoryContract', $mock);
+
 		$response = $this->call('DELETE', route('restaurants.opening_time.delete', [1]));
 
 		$this->assertTrue($response->isOk(),

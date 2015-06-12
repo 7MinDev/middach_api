@@ -1,27 +1,36 @@
 <?php
 
-class TestCase extends Illuminate\Foundation\Testing\TestCase {
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-	/**
-	 * Creates the application.
-	 *
-	 * @return \Illuminate\Foundation\Application
-	 */
-	public function createApplication()
-	{
-		$app = require __DIR__.'/../bootstrap/app.php';
+class TestCase extends Illuminate\Foundation\Testing\TestCase
+{
 
-		$app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
+    use DatabaseMigrations;
 
-		return $app;
-	}
+    /**
+     * the base url to use when testing
+     * @var string
+     */
+    protected $baseUrl = 'http://middach.dev:8000';
 
-	public function setUp()
-	{
-		parent::setUp();
-		Artisan::call('migrate');
-		Artisan::call('db:seed');
-		Mail::pretend(true);
-	}
+    /**
+     * Creates the application.
+     *
+     * @return \Illuminate\Foundation\Application
+     */
+    public function createApplication()
+    {
+        $app = require __DIR__ . '/../bootstrap/app.php';
+        $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+
+        return $app;
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->runDatabaseMigrations();
+        Mail::pretend(true);
+    }
 
 }
