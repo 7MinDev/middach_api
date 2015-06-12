@@ -22,7 +22,8 @@ class RestaurantsControllerTest extends TestCase
         $this->withoutMiddleware();
 
         // set a logged in user
-        $this->user = factory(User::class)->make();
+        $this->user = factory(User::class)
+            ->make(['id' => 1]);
         Sentinel::setUser($this->user);
     }
 

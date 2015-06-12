@@ -24,7 +24,9 @@ class MenusControllerTest extends TestCase
         $this->withoutMiddleware();
 
         // set a logged in user
-        $this->user = factory(User::class)->make();
+        // set a logged in user
+        $this->user = factory(User::class)
+            ->make(['id' => 1]);
         Sentinel::setUser($this->user);
     }
 
