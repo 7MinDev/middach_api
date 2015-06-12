@@ -101,7 +101,7 @@ class RestaurantsControllerTest extends TestCase
         $restaurant = factory(Restaurant::class)
             ->make(['id' => 1])
             ->owner()
-            ->associate(factory(User::class)->make());
+            ->associate(factory(User::class)->make(['id' => 123]));
 
         $restaurantMock = Mockery::mock('App\Repositories\Contracts\RestaurantRepositoryContract');
         $restaurantMock->shouldReceive('findById')->andReturn($restaurant);
@@ -149,7 +149,7 @@ class RestaurantsControllerTest extends TestCase
         $restaurant = factory(Restaurant::class)
             ->make(['id' => 1])
             ->owner()
-            ->associate(factory(User::class)->make());
+            ->associate(factory(User::class)->make(['id' => 123]));
 
         $restaurantMock = Mockery::mock('App\Repositories\Contracts\RestaurantRepositoryContract');
         $restaurantMock->shouldReceive('findById')->andReturn($restaurant);

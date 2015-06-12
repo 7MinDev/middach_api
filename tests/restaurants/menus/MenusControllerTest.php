@@ -104,7 +104,7 @@ class MenusControllerTest extends TestCase
      */
     public function delete_should_fail_because_user_ids_do_not_match()
     {
-        $wrongUser = factory(User::class)->make();
+        $wrongUser = factory(User::class)->make(['id' => 123]);
         $menu = factory(Menu::class)
             ->make(['id' => 1])
             ->user()
@@ -128,7 +128,7 @@ class MenusControllerTest extends TestCase
         $menu = factory(Menu::class)
             ->make(['id' => 1])
             ->user()
-            ->associate(factory(User::class)->make());
+            ->associate(factory(User::class)->make(['id' => 123]));
 
         $menuMock = Mockery::mock('App\Repositories\Contracts\MenuRepositoryContract');
         $menuMock->shouldReceive('findById')->andReturn($menu);
