@@ -81,10 +81,7 @@ return [
             'class' => 'League\OAuth2\Server\Grant\PasswordGrant',
             'access_token_ttl' => 604800,
 
-            'callback' => function($username, $password)
-            {
-                return Authenticator::login($username, $password);
-            }
+            'callback' => Authenticator::class . '@login',
         ],
 
         'refresh_token' => [

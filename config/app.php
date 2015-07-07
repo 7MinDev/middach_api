@@ -199,7 +199,7 @@ return [
 		'Activation' => 'Cartalyst\Sentinel\Laravel\Facades\Activation',
 		'Reminder'   => 'Cartalyst\Sentinel\Laravel\Facades\Reminder',
 		'Sentinel'   => 'Cartalyst\Sentinel\Laravel\Facades\Sentinel',
-		'Authorizer' => 'LucaDegasperi\OAuth2Server\Facades\AuthorizerFacade',
+        'Authorizer' => 'LucaDegasperi\OAuth2Server\Facades\Authorizer',
 	],
 
 ];

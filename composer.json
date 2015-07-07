@@ -10,7 +10,7 @@
   "require": {
     "laravel/framework": "5.1.*",
     "cartalyst/sentinel": "2.0.*",
-    "lucadegasperi/oauth2-server-laravel": "4.0.x@dev",
+    "lucadegasperi/oauth2-server-laravel": "~4.1",
     "guzzlehttp/guzzle": "~4.0",
     "doctrine/dbal": "2.5.*@dev"
   },
